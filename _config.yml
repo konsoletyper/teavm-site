@@ -1,0 +1,42 @@
+title: TeaVM
+email: info@teavm.org
+description: >
+  A Java bytecode to JavaScript translator.
+
+baseurl: ""
+url: http://teavm.org
+git_address: https://github.com/konsoletyper/teavm-site
+git_edit_address: https://github.com/konsoletyper/teavm-site
+forum_address: https://groups.google.com/forum/#!forum/teavm
+
+bootwatch: readable
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+gems:
+  - jekyll-feed
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - .idea/
+  - .gitignore
+  - README.md
+
+timezone: Europe/Moscow
+defaults:
+- scope:
+    path: _docs
+    type: docs
+  values:
+    layout: docs
+    sectionid: docs
+
+collections:
+  docs:
+    permalink: /:collection/:path/
+    output: true
