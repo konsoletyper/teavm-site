@@ -6,7 +6,7 @@ description: >
 baseurl: ""
 url: http://teavm.org
 git_address: https://github.com/konsoletyper/teavm-site
-git_edit_address: https://github.com/konsoletyper/teavm-site
+git_edit_address: https://github.com/konsoletyper/teavm-sitetree/master
 forum_address: https://groups.google.com/forum/#!forum/teavm
 
 bootwatch: readable
@@ -38,5 +38,5 @@ defaults:
 
 collections:
   docs:
-    permalink: /:collection/:path/
+    permalink: /:collection/:path.html
     output: true

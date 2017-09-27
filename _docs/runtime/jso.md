@@ -1,6 +1,5 @@
 ---
 title: Interacting with JavaScript
-permalink: /docs/runtime/jso/
 ---
 
 TeaVM runs in browser and can't be isolated from browser's environment.
