@@ -1,3 +1,8 @@
+---
+title: Standard components - html package
+exclude_from_nav: true
+---
+
 This package includes following components:
 
 * [text](#text)
