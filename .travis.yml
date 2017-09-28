@@ -2,7 +2,7 @@ language: ruby
 rvm:
 - 2.3.3
 
-script: ./script/cibuild.sh
+script: bundle exec jekyll build
 
 branches:
   only:
