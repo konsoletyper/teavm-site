@@ -25,6 +25,7 @@ exclude:
   - README.md
   - serve.sh
   - LICENSE
+  - vendor
 
 timezone: Europe/Moscow
 defaults:
