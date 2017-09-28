@@ -1,14 +1,13 @@
----
-title: Standard components - html package
-exclude_from_nav: true
----
-
 This package includes following components:
 
 * [text](#text)
 * [value](#value)
+* [checked](#checked)
 * [enabled](#enabled)
 * [change](#change)
+* [checked-change](#checked-change)
+* [bidir-value](#change)
+* [bidir-checked](#change)
 * [link](#link)
 
 
@@ -65,6 +64,29 @@ Example:
 </form>
 ```
 
+# checked
+
+Binds checked attribute of input element (with `type="checkbox"`) to expression.
+
+Syntax:
+
+```
+html:checked="expression"
+```
+
+Where:
+
+* `expression` is an expression that's been evaluated.
+
+Example:
+
+```html
+<form>
+  <div class="form-label"><label for="employee-coffee">Free coffee</label></div>
+  <div class="form-input"><input type="checkbox" id="employee-coffee" html:checked="employee.receivingFreeCooffee"/></div>
+</form>
+```
+
 
 # enabled
 
@@ -111,6 +133,82 @@ Example:
 <div class="form-label"><label for="employee-first-name">First name</label></div>
 <div class="form-input">
   <input id="employee-first-name" html:value="employee.firstName" html:change="employee.firstName = it"/>
+</div>
+```
+
+
+# checked-change
+
+Sets event handler for changing `checked` attribute.
+
+Syntax:
+
+```
+html:checked-change="expression"
+```
+
+Where:
+
+* `expression` is a lambda expression which runs as change event is triggered.
+
+Example:
+
+```html
+<div class="form-label"><label for="employee-free-coffee">First name</label></div>
+<div class="form-input">
+  <input type="checkbox" id="employee-free-coffee" html:checked="employee.receivingFreeCoffee" 
+         html:checked-change="employee.receivingFreeCoffee"/>
+</div>
+```
+
+# bidir-value
+
+Acts as both [value](#value) and and [change](#change).
+Used to establish bidirectional binding between property and `input` element.
+
+Syntax:
+
+```
+html:bidir-value="expression.propertyName"
+```
+
+Where:
+
+* `expression` is a property owner.
+* `property` is a property name.
+
+Example:
+
+```html
+<div class="form-label"><label for="employee-first-name">First name</label></div>
+<div class="form-input">
+  <input id="employee-first-name" html:bidir-value="employee.firstName"/>
+</div>
+```
+
+
+# bidir-checked
+
+Acts as both [checked](#checked) and and [checked-change](#checked-change).
+Used to establish bidirectional binding between boolean property and `input type="checkbox""` element.
+
+Syntax:
+
+```
+html:bidir-checked="expression.propertyName"
+```
+
+Where:
+
+* `expression` is a property owner.
+* `property` is a property name.
+
+Example:
+
+```html
+<div class="form-label"><label for="employee-free-coffee">Free coffee</label></div>
+<div class="form-input">
+  <input type="checkbox" id="employee-free-coffee" html:bidir-checked="employee.receivingFreeCoffee"/>
 </div>
 ```
 
