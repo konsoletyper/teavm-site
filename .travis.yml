@@ -12,5 +12,7 @@ sudo: false
 
 after_success: >
   if [[ "${TRAVIS_PULL_REQUEST:-unknown}" == "false" && $TRAVIS_BRANCH == master ]] ; then
-    curl --ftp-create-dirs -T _site/* -u $FTP_USER:$FTP_PASSWORD $FTP_HOST
+    pushd _site
+    find . -type f -exec curl -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {} $FTP_HOST/{} \;
+    popd
   fi
