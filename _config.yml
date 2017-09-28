@@ -5,7 +5,7 @@ description: >
 
 baseurl: ""
 url: http://teavm.org
-git_address: https://github.com/konsoletyper/teavm-site
+git_address: https://github.com/konsoletyper/teavm
 git_edit_address: https://github.com/konsoletyper/teavm-site/edit/master
 forum_address: https://groups.google.com/forum/#!forum/teavm
 
