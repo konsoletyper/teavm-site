@@ -15,9 +15,6 @@ bootwatch: readable
 markdown: kramdown
 highlighter: rouge
 gems:
-  - jekyll-feed
-  - jekyll-redirect-from
-  - jekyll-seo-tag
   - jekyll-sitemap
 
 exclude:
@@ -26,6 +23,9 @@ exclude:
   - .idea/
   - .gitignore
   - README.md
+  - serve.sh
+  - LICENSE
+  - script
 
 timezone: Europe/Moscow
 defaults:
