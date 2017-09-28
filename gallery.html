@@ -9,9 +9,17 @@ layout: default
       <div id="markdown-content-container">
         {% for example in site.data.examples %}
           <div class="thumbnail">
-            <a href="{{ example.link }}">
-              <img src="/img/examples/{{ example.thumbnail }}">
-            </a>
+            <div>
+              <a href="{{ example.link }}">
+                <img src="/img/examples/{{ example.thumbnail }}">
+              </a>
+            </div>
+            <div>
+              {{ example.title }}
+              {% if example.source_code %}
+                <a href="{{ example.source_code }}">(source&nbsp;code)</a>
+              {% endif %}
+            </div>
           </div>
         {% endfor %}
       </div>
