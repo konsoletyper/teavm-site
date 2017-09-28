@@ -31,3 +31,12 @@ This should generate a new minimal Flavour application.
 
 You can build the generated project as usual by `mvn package`.
 After successful build you should be able to open `target/hello-1.0-SNAPSHOT/index.html` in your browser.
+
+
+## Further learning
+
+You can learn TeaVM by examples. There are several sources of examples:
+ 
+* [Application gallery](/gallery.html).
+* [Samples from TeaVM repository](https://github.com/konsoletyper/teavm/tree/master/samples).
+* [Flavour example application](https://github.com/konsoletyper/teavm-flavour/tree/master/example).

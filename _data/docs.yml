@@ -18,10 +18,11 @@
   docs:
   - flavour/templates
   - flavour/expression-language
+  - flavour/standard-components
   - flavour/custom-components
   - flavour/components-advanced-topics
   - flavour/form-validation
-  - flavour/advanced-UI-components
+  - flavour/advanced-ui-components
   - flavour/routing
   - flavour/json
   - flavour/rest-client

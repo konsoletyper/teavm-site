@@ -51,7 +51,7 @@ For example, look at [std:with](std-component-package#with) implementation:
 # Inner components
 
 Sometimes there is a component that can't function alone.
-For example, [std:choose](std-component-package#choose) is implemented as
+For example, [std:choose](/docs/flavour/component-packages/std.html#choose) is implemented as
 one parent component and number of components for each clause.
 It's possible to create inner components applying `@BindElement` on methods.
 See this excerpt from `std:choose` implementation:

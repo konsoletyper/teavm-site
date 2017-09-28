@@ -131,7 +131,7 @@ public class SimpleDataSource<T> implements DataSource<T> {
 }
 ```
 
-The real-world implementation may communicate server via [REST API](REST-client),
+The real-world implementation may communicate server via [REST API](/docs/flavour/rest-client.html),
 and server, in turn, may query data from database 
 (in case of SQL database `offset` and `limit` parameters map directly to corresponding SQL query clauses).
 
@@ -165,7 +165,7 @@ Where
   that will be shown by the component.  
 * `page-link="(pageNumber, consumer) -> expression"` is an optional lambda expression that generates
   link to page.
-  See [html:link](html-component-package#link) component for description of `consumer` parameter.
+  See [html:link](/docs/flavour/component-packages/html.html#link) component for description of `consumer` parameter.
   It this attribute presents, paginator will update current URL as users clicks the page button.
 
 Note that actually paginator accepts `Pageable` implementation as a data source,

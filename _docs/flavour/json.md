@@ -15,7 +15,7 @@ But most of all, the goal of implementing subset of Jackson was to allow develop
 reuse annotated classes both on client and server side.
 
 The main use-case for JSON serialization is communication to server.
-In this case Flavour has [built-in solution](REST-client),
+In this case Flavour has [built-in solution](/docs/flavour/rest-client.html),
 so you don't have to deal with JSON API directly.
 But there are some cases when you want to call JSON API.
 The following example shows how to use it:

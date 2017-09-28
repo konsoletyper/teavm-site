@@ -80,60 +80,16 @@ Here is the list of properties supported by the goal:
   JavaScript file, specified by the **targetFileName**.
   The `NONE` value means that the `runtime.js` file will not be copied at all.
 * **transformers** &ndash; an array of fully qualified class names.
-  Each class must implement the [ClassHolderTransformer](../blob/master/core/src/main/java/org/teavm/model/ClassHolderTransformer.java)
+  Each class must implement [ClassHolderTransformer](/javadoc/0.5.x/core/org/teavm/model/ClassHolderTransformer.html)
   interface and have a public no-argument constructor. These transformers are used to transform `ClassHolder`s,
   that are SSA-based representation of JVM classes.
   Transformers run right after parsing JVM classes and producing SSA representation.
-* **classAliases** &ndash; a list of classes that must be given the specified names in the generated JavaScript.
-  By default, TeaVM generates random names of the classes.
-  For integration with the existing JavaScript code,
-  it is sometimes required to ensure that classes have the exact name.
-  This property should contain a list of items with the following properties:
-
-  * **className** &ndash; a fully qualified name of class;
-  * **alias** &ndash; a name that will be given to the class in JavaScript;
-
-  Note, that the specified classes will be used as dependency roots by the dependency analyzer,
-  so you can rely on the presence of these classes in the generated JavaScript. For example:
-  ```xml
-  <classAliases>
-    <item>
-      <className>java.lang.Math</className>
-      <alias>JavaMath</alias>
-    </item>
-    <item>
-      <className>java.lang.String</className>
-      <alias>JavaString</alias>
-    </item>
-  </classAliases>
-  ```
-* **methodAliases** &ndash; a list of methods that must be given the specified names in the generated JavaScript.
-  By default, TeaVM generates random names of the methods. For integration with the existing JavaScript code,
-  it is sometimes required to ensure that methods have the exact name.
-  This property should contain a list of items with the following properties:
-  * **alias** &ndash; a name that will be given to the method in JavaScript;
-  * **className** &ndash; the name of the class containing the method;
-  * **methodName** &ndash; the name of the method;
-  * **descriptor** &ndash; the method descriptor, as specified in the
-    [VM Spec](http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3);
-  * **types** &ndash; array of concrete types passed to each parameter.
-    Each element of the array corresponds the parameter of the method.
-    Each element must contain a space-separated list of possible classes, passed to the parameter.
-    Required by dependency analyzer.
-  
-  Note, that the specified method will be used as dependency roots by the dependency analyzer,
-  so you can rely on the presence of these methods in the generated JavaScript. For example:
-
-  ```xml
-  <methodAliases>
-    <item>
-      <alias>JavaSortCollection</alias>
-      <className>java.util.Collections</className>
-      <methodName>sort</methodName>
-      <descriptor>(Ljava/util/List;)V</descriptor>
-      <types>
-        <item>java.util.ArrayList java.util.Vector</item>
-      </types>
-    </item>
-  </methodAliases>
-  ```
+* **optimizationLevel** &ndash; how strong should TeaVM optimize your code. Following options are supported:
+  * *SIMPLE* &ndash; perform only basic optimizations, remain friendly to the debugger; recommended for development;
+  * *ADVANCED* &ndash; perform more optimizations, sometimes may stuck debugger; recommended for production;
+  * *FULL* &ndash; perform aggressive optimizations; 
+    increase compilation time, sometimes can make code even slower; 
+    recommended for WebAssembly.
+* **targetType** &ndash; what code to generate. Following options are supported:
+  * *JAVASCRIPT*
+  * *WEBASSEMBLY*

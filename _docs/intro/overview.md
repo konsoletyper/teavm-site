@@ -2,19 +2,68 @@
 title: Overview
 ---
 
-# What is Flavour
+TeaVM is an ahead-of-time compiler of Java bytecode to JavaScript.
+It's much like GWT, however GWT takes source code, and this limits GWT to Java only.
+Unlike GWT, TeaVM relies on existing compilers, be it javac, kotlinc or scalac.
+These compilers produce bytecode (`*.class` or `*.jar` files),
+then TeaVM takes this bytecode and produces JavaScript code.
 
+
+# Purpose
+
+TeaVM is a primarily web development tool.
+It's not for getting your large existing codebase in Java or Kotlin and producing JavaScript.
+Unfortunately, Java was not designed to run efficiently in the browser.
+There are Java APIs that are impossible to implement without generating unefficient JavaScript.
+Some of these APIs are: reflection, resources, class loaders, JNI.
+TeaVM restricts usages of these APIs.
+Generally, you'll have to manually rewrite your code to fit into TeaVM constraints.
+
+TeaVM is for you, if:
+
+  * You are a Java developer and you are going to write web front-end from scratch.
+  * You already have Java-based backend and want to integrate front-end code tightly into your existing development
+    infrastructure.
+  * You have some Java back-end code you want to reuse in front-end.  
+  * You are ready to rewrite your code to work with TeaVM.
+
+If you have bloated applications that use Swing, you want to run these applications in web,
+and you don't care about download size, start-up time and performance, you better give up;
+there are more appropriate tools for you, like [CheerpJ](https://www.leaningtech.com/cheerpj/).
+
+
+# Strong parts
+
+* TeaVM tries to reconstruct original structure of a method, 
+  so in most cases it produces JavaScript that you would write manually.
+  No bloated while/switch statements, as naive compilers often do.
+* TeaVM has a very sophisticated optimizer, which knows a lot about your code. Some examples are:
+  * Dead code elimination allows to produce very small JavaScript. 
+  * Devirtualization turns virtual calls into static function calls, which makes code faster.
+  * TeaVM can reuse one local variables to store several local variables.
+  * TeaVM renames methods to as short forms as possible; UglifyJS usually can't perform such optimization.
+* TeaVM supports threads. 
+  JavaScript does not provide APIs to create threads 
+  (WebWorkers are not threads, since they don't allow to share state between workers).
+  TeaVM is capable of transforming methods to continuation-passing style.
+  This makes possible to emulate multiple logical threads in one physical thread.
+  TeaVM threads are, in fact, [green threads](https://en.wikipedia.org/wiki/Green_threads).
+* TeaVM is very fast, you don't need to wait for minutes until application gets recompiled.
+* TeaVM produces source maps; TeaVM IDEA plugin allows to [debug code right from the IDE](/docs/tooling/debugging.html). 
+* TeaVM has a nice [JavaScript interop API](/docs/runtime/jso.html).
+
+
+# Flavour framework  
+
+TeaVM has a subproject, called Flavour.
 Flavour is a framework for writing single-paged web applications.
-It's based on [TeaVM](https://github.com/konsoletyper/teavm), compiler of JVM bytecode to JavaScript.
-TeaVM itself is a compiler which is capable of executing JAR files in the browser, and nothing more.
-You can't write web applications using TeaVM, because Java standard library knows nothing about DOM and data binding.
-Flavour closes this gap with HTML templating library with data binding,
+It provides HTML template engine with data binding,
 which is very similar to popular JavaScript frameworks like [Angular](https://angularjs.org/),
 [React](https://facebook.github.io/react/), [Vue.js](https://vuejs.org/) and so forth.
-Additionally, Flavour provides library to generate, parse human-readable URLs,
+Additionally, Flavour provides facilities to generate, parse human-readable URLs,
 as well as binding them to the browser's address line via history API.
 
-Another reasons is: due to several reasons it's hard to support entire JDK in TeaVM,
+Another purpose of Flavour is: due to several reasons it's hard to support entire JDK in TeaVM,
 especially things like reflection, class loading, resources, threads,
 thus most Java libraries for data serialization and network communication are unavailable in TeaVM.
 Flavour reimplements reasonable subsets of [Jackson](https://github.com/FasterXML/jackson) and 
@@ -29,12 +78,12 @@ To make this easier, Flavour tries to be as close to usual Java developers as po
 
 # Motivation
 
-Why using Flavour while there are plenty of frameworks?
+Why using TeaVM while there are plenty of transpilers and frameworks for web front-end development?
 
 If you are a JavaScript developer who is satisfied with JavaScript, TypeScript or even elm,
-you probably won't need Flavour.
+you probably won't need TeaVM.
 
-If you are a Java (or Kotlin) developer who used to write back-end code, TeaVM might be your choice.
+If you are a Java (or Kotlin, or Scala) developer who used to write back-end code, TeaVM might be your choice.
 It's true that a good developer (including Java developer) can learn JavaScript.
 However, to become an expert you have to spend reasonable amount of your time.
 
@@ -45,18 +94,5 @@ with Sonar Cube checking your code quality and IDEA code style settings.
 You have to repeat all these things for the JavaScript ecosystem.
 Finally, you have to "switch context" every time you change the code on back-end and front-end side.
 
-Flavour allows you to use single ecosystem, and reuse as much as possible of it for
+TeaVM allows you to use single ecosystem, and reuse as much as possible of it for
 both back-end and front-end worlds.
-
-GWT serves the similar purpose.
-However, TeaVM has some advantages over GWT:
-
-* It supports Kotlin and (probably) Scala, so you can use these languages with Flavour.
-* It's faster and produces faster code.
-* It supports more JDK than GWT. With TeaVM you can even start threads (which are emulated by coroutines).
-  Forget about generating asynchronous interfaces for RPC!
-* Flavour is more convenient and friendly to HTML concepts.
-  Widget-based approach used by GWT turned out to be a bad idea.
-  Use Flavour and be as happy as Angualar developers are!
-* Flavour tries to follow standards.
-  While GWT invents its own serialization format and its own RPC, Flavour just reuses widely used Jackson and JAX-RS.

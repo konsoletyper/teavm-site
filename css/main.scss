@@ -53,6 +53,7 @@ body {
   background-position: center 36%;
   margin-top: -37px;
 }
+
 .navbar-container {
   font-size: 16px;
 }
@@ -83,4 +84,16 @@ body {
 }
 .navbar-form .has-feedback .form-control-feedback{
   top:10px
+}
+
+.thumbnail {
+  width: 300px;
+  min-height: 200px;
+  display: inline-block;
+  vertical-align: middle;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
 }
