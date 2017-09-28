@@ -2,7 +2,7 @@
 title: Getting started
 ---
 
-There are several options of using TeaVM. One is the Maven build.
+There are several options of using TeaVM. One is Maven build.
 The easiest way to create a new TeaVM project is to type in the command line:
 
 ```bash

@@ -92,7 +92,7 @@ Example:
 # change
 
 Sets change event handler.
-This is more flexible than [event:change](event-component-package), since, unlike `event:change`,
+This is more flexible than [event:change](/docs/flavour/component-packages/event.html), since, unlike `event:change`,
 `html:change` uses Flavour change tracking mechanism, not native DOM.
 
 Syntax:
@@ -130,7 +130,7 @@ Where:
 * `expression` is a lambda expression that is run to compute hyperlink target.
   This lambda takes `Comsumer<String>` as a single parameter and must call `apply()` method.
   Such strange API is required for integration with routing library.
-  If you want to generate target manually, you better use [attr:href](attr-component-package).
+  If you want to generate target manually, you better use [attr:href](/docs/flavour/component-packages/attr.html).
 
 Example:
 
