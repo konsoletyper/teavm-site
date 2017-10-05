@@ -23,7 +23,7 @@ To create your own wrappers, you should include the following
 <dependency>
   <groupId>org.teavm</groupId>
   <artifactId>teavm-jso</artifactId>
-  <version>0.5.1</version>
+  <version>{{ site.teavm.version }}</version>
 </dependency>
 ```
 
@@ -33,7 +33,7 @@ To use existing wrapper, you may also include the following
 <dependency>
   <groupId>org.teavm</groupId>
   <artifactId>teavm-jso-apis</artifactId>
-  <version>0.5.1</version>
+  <version>{{ site.teavm.version }}</version>
 </dependency>
 ```
 
@@ -103,7 +103,7 @@ so you get all advantages of static type system, IDE support, javadoc, etc.
 
 An overlay type is an abstract class or an interface that meets the following conditions:
 
-* It must extend or implement [JSObject](/javadoc/0.5.x/jso/core/org/teavm/jso/JSObject.html) interface, directly or indirectly.
+* It must extend or implement [JSObject](/javadoc/{{ site.teavm_branch }}/jso/core/org/teavm/jso/JSObject.html) interface, directly or indirectly.
 * It must not have member fields.
 * All of its methods are either abstract or static or final; no member methods with implementation are allowed.
 * Final member methods must not implement or override parent method.
@@ -133,7 +133,7 @@ Wrapping properties
 To access JavaScript properties from Java, you should declare getter and setter methods, both optional.
 Getters and setters must satisfy Java Beans naming conventions.
 You also must annotate getters and setters with the
-[@JSProperty](/javadoc/0.5.x/jso/core/org/teavm/jso/JSProperty.html) annotation.
+[@JSProperty](/javadoc/{{ site.teavm_branch }}/jso/core/org/teavm/jso/JSProperty.html) annotation.
 By default, these methods will access the JavaScript property with the corresponding name, but
 you can define another property name in *@JSProperty*.
 
@@ -243,7 +243,7 @@ Indexer methods are either get indexers or set indexers.
 You are free to name your indexers as your want.
 
 To tell TeaVM that method is either get or set indexer, you should annotate it with
-[@JSIndexer](/javadoc/0.5.x/jso/core/org/teavm/jso/JSIndexer.html).
+[@JSIndexer](/javadoc/{{ site.teavm_branch }}/jso/core/org/teavm/jso/JSIndexer.html).
 
 For example,
 
@@ -302,7 +302,7 @@ Passing Java objects as JavaScript functions
 Often, JavaScript APIs expect you to pass a callback function.
 This case is similar to passing as JavaScript objects, however you need to tell TeaVM to pass your
 Java classes as JavaScript functions.
-To do this, simply add the [@JSFunctor](/javadoc/0.5.x/jso/core/org/teavm/jso/JSFunctor.html) annotation.
+To do this, simply add the [@JSFunctor](/javadoc/{{ site.teavm_branch }}/jso/core/org/teavm/jso/JSFunctor.html) annotation.
 Functor interfaces must contain exactly one method.
 
 For example,
@@ -331,7 +331,7 @@ JavaScript wrapper methods are limited to take and return the following *support
 * `boolean`, `byte`, `short`, `int`, `float`, `double` which correspond to JavaScript numeric values.
 * `java.lang.String` which corresponds to JavaScript `String` object.
 * `T[]`, where T is a *supported* type, which corresponds to JavaScript array.
-* interface or class that implements [JSObject](/javadoc/0.5.x/jso/core/org/teavm/jso/JSObject.html).
+* interface or class that implements [JSObject](/javadoc/{{ site.teavm_branch }}/jso/core/org/teavm/jso/JSObject.html).
 
 Notice that TeaVM won't check types before passing, so you need to design your wrappers carefully,
 so that no type violations occur in runtime.
@@ -343,6 +343,6 @@ Dynamic type casting
 
 TeaVM does not support `instanceof` operator with `JSObject`.
 Please, use another mechanisms to determine actual type of your JavaScript wrappers.
-For example, to get actual type of [Node](/javadoc/0.5.x/jso/apis/org/teavm/jso/dom/xml/Node.html),
-use [getNodeType()](/javadoc/0.5.x/jso/apis/org/teavm/jso/dom/xml/Node.html#getNodeType%28%29) method
+For example, to get actual type of [Node](/javadoc/{{ site.teavm_branch }}/jso/apis/org/teavm/jso/dom/xml/Node.html),
+use [getNodeType()](/javadoc/{{ site.teavm_branch }}/jso/apis/org/teavm/jso/dom/xml/Node.html#getNodeType%28%29) method
 instead of `instanceof`.

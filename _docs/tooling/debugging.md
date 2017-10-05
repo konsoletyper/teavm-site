@@ -29,7 +29,7 @@ See the following snippet:
       <plugin>
         <groupId>org.teavm</groupId>
         <artifactId>teavm-maven-plugin</artifactId>
-        <version>0.5.0</version>
+        <version>{{ site.teavm_version }}</version>
         <executions>
           <execution>
             ...
@@ -69,7 +69,7 @@ Simply set the `debugInformationGenerated` property to `true`, as in the followi
       <plugin>
         <groupId>org.teavm</groupId>
         <artifactId>teavm-maven-plugin</artifactId>
-        <version>0.5.0</version>
+        <version>{{ site.teavm_version }}</version>
         <executions>
           <execution>
             ...

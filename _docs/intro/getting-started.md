@@ -9,7 +9,7 @@ The easiest way to create a new TeaVM project is to type in the command line:
 mvn -DarchetypeCatalog=local \
   -DarchetypeGroupId=org.teavm \
   -DarchetypeArtifactId=teavm-maven-webapp \
-  -DarchetypeVersion=0.5.0 archetype:generate
+  -DarchetypeVersion={{ site.teavm_version }} archetype:generate
 ```
 
 Now you can execute `mvn clean package` and get the generated `war` file.
@@ -24,7 +24,7 @@ Another option is to use Flavour, you should specify another archetype:
 mvn archetype:generate \
   -DarchetypeGroupId=org.teavm.flavour \
   -DarchetypeArtifactId=teavm-flavour-application \
-  -DarchetypeVersion=0.1.0
+  -DarchetypeVersion={{ site.flavour_version }}
 ```
 
 This should generate a new minimal Flavour application.
