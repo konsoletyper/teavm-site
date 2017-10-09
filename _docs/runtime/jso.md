@@ -23,7 +23,7 @@ To create your own wrappers, you should include the following
 <dependency>
   <groupId>org.teavm</groupId>
   <artifactId>teavm-jso</artifactId>
-  <version>{{ site.teavm.version }}</version>
+  <version>{{ site.teavm_version }}</version>
 </dependency>
 ```
 
@@ -33,7 +33,7 @@ To use existing wrapper, you may also include the following
 <dependency>
   <groupId>org.teavm</groupId>
   <artifactId>teavm-jso-apis</artifactId>
-  <version>{{ site.teavm.version }}</version>
+  <version>{{ site.teavm_version }}</version>
 </dependency>
 ```
 
