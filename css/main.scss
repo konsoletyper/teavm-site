@@ -18,8 +18,7 @@
     "bootswatch/{{site.bootwatch | downcase}}/bootswatch",
   {% endif %}
 
-  "syntax-highlighting",
-  "typeahead"
+  "syntax-highlighting"
 ;
 
 html {
@@ -96,4 +95,9 @@ body {
     width: 100%;
     height: auto;
   }
+}
+
+#accordion .panel-heading {
+  cursor: pointer;
+  position: relative;
 }

@@ -2,11 +2,17 @@
 {% for section in site.data.docs %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h4 class="panel-title">
-          {{ section.title }}
-      </h4>
+      <h4 class="panel-title" data-toggle="collapse" data-target="#collapse-{{forloop.index}}">{{ section.title }}</h4>
     </div>
-    <div class="panel-collapse " role="tabpanel" aria-labelledby="headingOne">
+
+    {% assign collapsed = true %}
+    {% for item in section.docs %}
+      {% assign item_url = item | prepend:"/docs/" | append:".html" %}
+      {% if item_url == page.url %}
+        {% assign collapsed = false %}
+      {% endif %}
+    {% endfor %}
+    <div class="panel-collapse{% if collapsed %} collapse{% endif %}" id="collapse-{{forloop.index}}" role="tabpanel" aria-labelledby="headingOne">
       <ul class="list-group">
         {% for item in section.docs %}
           {% assign item_url = item | prepend:"/docs/" | append:".html" %}
