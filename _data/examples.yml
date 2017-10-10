@@ -13,6 +13,11 @@
   source_code: https://github.com/konsoletyper/teavm-flavour-minesweeper
   thumbnail: flavour-minesweeper.png
 
+- title: Minesweeper in DukeScript
+  link: /live-examples/minesweeper/
+  source_code: https://github.com/jtulach/minesweeper
+  thumbnail: dukescript-minesweeper.png
+
 - title: Calculator in Scala
   link: /live-examples/scala/index.html
   source_code: https://github.com/konsoletyper/teavm/tree/master/samples/scala

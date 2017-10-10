@@ -2,6 +2,7 @@
   docs:
   - intro/overview
   - intro/getting-started
+  - intro/dukescript
 
 - title: Runtime API
   docs:
