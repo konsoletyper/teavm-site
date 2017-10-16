@@ -47,7 +47,7 @@ Here is an example of how to use it:
 
 Here is the list of properties supported by the goal:
 
-* **mainClass** &ndash; a fully qualified name of a class that contains the `main(String[])` mehtod. 
+* **mainClass** &ndash; a fully qualified name of a class that contains the `main(String[])` method. 
   When this property specified, TeaVM produces `main` function in global scope that runs the translated
   version of the the `main(String[])` method in the browser.
 * **targetDirectory** &ndash; a path to a directory where TeaVM produces all its output.

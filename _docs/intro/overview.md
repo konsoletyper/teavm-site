@@ -14,7 +14,7 @@ then TeaVM takes this bytecode and produces JavaScript code.
 TeaVM is a primarily web development tool.
 It's not for getting your large existing codebase in Java or Kotlin and producing JavaScript.
 Unfortunately, Java was not designed to run efficiently in the browser.
-There are Java APIs that are impossible to implement without generating unefficient JavaScript.
+There are Java APIs that are impossible to implement without generating inefficient JavaScript.
 Some of these APIs are: reflection, resources, class loaders, JNI.
 TeaVM restricts usages of these APIs.
 Generally, you'll have to manually rewrite your code to fit into TeaVM constraints.
