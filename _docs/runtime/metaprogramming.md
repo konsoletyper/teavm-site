@@ -43,7 +43,7 @@ Let's start by writing a method which reads field called `foo` or returns `null`
 ```
 
 Here, our method simply delegates all work to `getFooImpl`, which is a native method marked with `@Meta` annotation.
-This annotation does all magic. It tells compiler to generate body of `getFooImpl` by inoking another `getFooImpl`
+This annotation does all magic. It tells compiler to generate body of `getFooImpl` by invoking another `getFooImpl`
 method with slightly different signature. It's quite easy to find the difference: returning value must be `void`,
 the `ReflectClass` argument must correspond to `Class` and `Value` argument must correspond to any other argument.
 Note that only one argument can be of `ReflectClass` type.
@@ -112,7 +112,7 @@ have some restrictions over variables they can capture.
 
 These captured variables act as template parameters.
 
-The main (and the simpliest) one is `Metaprogramming.emit`. It simply writes template as-is. `exit` method
+The main (and the simplest) one is `Metaprogramming.emit`. It simply writes template as-is. `exit` method
 writes template and additional `return` statement which returns expression evaluated by lambda.
 `lazy` does not write template immediately. Instead, it produces `Value` which is written as soon as
 accessed by another lambda.
