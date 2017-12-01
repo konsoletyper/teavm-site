@@ -14,7 +14,7 @@ After you install TeaVM and restart IDEA, you are ready to create a project.
 Creating a project
 ------------------
 
-Create a new project from terminal using Maven archetype, as described in [Getting started](/docs/getting-started.html) section.
+Create a new project from terminal using Maven archetype, as described in [Getting started](/docs/intro/getting-started.html) section.
 
 If everything went OK, your project should look like this:
 
