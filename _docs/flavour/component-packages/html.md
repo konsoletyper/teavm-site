@@ -231,14 +231,14 @@ Syntax:
 Where:
 
 * `expression` is a lambda expression that is run to compute hyperlink target.
-  This lambda takes `Comsumer<String>` as a single parameter and must call `apply()` method.
+  This lambda takes `Comsumer<String>` as a single parameter and must call `accept()` method.
   Such strange API is required for integration with routing library.
   If you want to generate target manually, you better use [attr:href](/docs/flavour/component-packages/attr.html).
 
 Example:
 
 ```html
-<a html:link="it.apply('#employees/' + employee.id)">
+<a html:link="it.accept('#employees/' + employee.id)">
   <html:text value="employee.firstName"/> <html:text value="employee.lastName"/>
 </a>
 ```
