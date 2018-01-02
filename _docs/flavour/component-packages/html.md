@@ -238,7 +238,7 @@ Where:
 Example:
 
 ```html
-<a html:link="it.accept('#employees/' + employee.id)">
+<a html:link="it.accept('/employees/' + employee.id)">
   <html:text value="employee.firstName"/> <html:text value="employee.lastName"/>
 </a>
 ```
