@@ -7,6 +7,7 @@
 - title: Runtime API
   docs:
   - runtime/jso
+  - runtime/coroutines
   - runtime/metaprogramming
 
 - title: Tooling
