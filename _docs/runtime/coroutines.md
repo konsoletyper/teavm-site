@@ -36,7 +36,7 @@ foo("some argument", function(result) {
 })
 ```
 
-We want to call is synchronously from Java.
+We want to call it synchronously from Java.
 In this case we need `@Async` annotation:
 
 ```java
