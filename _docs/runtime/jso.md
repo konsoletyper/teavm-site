@@ -314,7 +314,7 @@ public interface TimerHandler extends JSObject {
 }
 
 @JSBody(params = { "handler", "delay" }, script = "setTimeout(handler, delay);")
-static void setTimeout(TimerHandler handler, int delay);
+static native void setTimeout(TimerHandler handler, int delay);
 
 static void doWork() {
     HTMLDocument doc = HTMLDocument.current();
