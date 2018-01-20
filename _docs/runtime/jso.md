@@ -98,7 +98,7 @@ Overlay types
 Often you are not satisfied exchanging primitives with JavaScript.
 JSO comes with concept of *overlay types*, similar to overlay types in GWT.
 Overlay types allow to talk with JavaScript in terms of objects.
-However, as JSO it built upon Java, overlay objects are almost regular Java objects,
+However, as JSO is built upon Java, overlay objects are almost regular Java objects,
 so you get all advantages of static type system, IDE support, javadoc, etc.
 
 An overlay type is an abstract class or an interface that meets the following conditions:
