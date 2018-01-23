@@ -3,7 +3,7 @@ title: Metaprogramming API
 ---
 
 TeaVM was designed to create web applications. One important requirement for web applications is their size.
-Nobody will use a compiler which produces tenths of megabytes of JS. That's why tools like TeaVM and GWT
+Nobody will use a compiler which produces tens of megabytes of JS. That's why tools like TeaVM and GWT
 perform advanced optimizations to reduce code size. Unfortunately, it's impossible to make these optimizations
 reflection-friendly. Even if TeaVM implemented reflection, any attempt to use it could lead to "dependency explosion",
 i.e. huge JS file. That's why TeaVM does not provide reflection support. Instead, it comes with its own replacement,
