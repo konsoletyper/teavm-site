@@ -28,7 +28,7 @@ Flavour provides the number of standard component packages:
 * [html](/docs/flavour/component-packages/html.html) &ndash; contains components to work with HTML-specific DOM.
 
 Note that there's no magic behind these components,
-they are built upon the same API you can use to create [custom components](/docs/flavour-custom-components.html).
+they are built upon the same API you can use to create [custom components](custom-components.html).
 If you want to learn standard components a little deeper, you can examine their 
 [source code](https://github.com/konsoletyper/teavm-flavour/tree/master/templates/src/main/java/org/teavm/flavour/components).
 
