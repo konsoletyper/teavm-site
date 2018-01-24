@@ -34,7 +34,7 @@ EL consists of the following elements:
 
 # `this` object
 
-As you [already know](Introduction-to-templating#creating-a-new-page), page consists of HTML template and view class.
+As you [already know](templates.html#creating-a-new-page), page consists of HTML template and view class.
 To refer to instance of view class from an HTML template, you can use `this` literal.
 Like in Java, you are not forced to do it.
 Instead of writing `this.foo()`, you can write simply `foo()`.
