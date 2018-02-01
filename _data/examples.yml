@@ -32,3 +32,7 @@
   link: /live-examples/libgdx-demo-invaders/
   source_code: https://github.com/konsoletyper/teavm-libgdx
   thumbnail: invaders.png
+  
+- title: SnapKit Demos
+  link: http://reportmill.com/snaptea
+  thumbnail: SnapKitDemos.png
