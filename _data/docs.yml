@@ -9,6 +9,7 @@
   - runtime/jso
   - runtime/coroutines
   - runtime/metaprogramming
+  - runtime/java-classes
 
 - title: Tooling
   docs:
