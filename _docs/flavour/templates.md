@@ -2,14 +2,14 @@
 title: HTML templates
 ---
 
-Flavour provides convenient way to render and update DOM via HTML templates.
-All you need is to define class with data and behaviour and bind it to HTML template.
-This section describes following topics:
+Flavour provides a convenient way to render and update DOM via HTML templates.
+All you need is to define a class with data and behaviour, then bind it to an HTML template.
+This section describes the following topics:
 
 * how to create HTML templates;
 * how to use standard components;
 * how to create custom components;
-* how to use expression language.
+* how to use Flavour's expression language.
 
 
 # Creating a new page
@@ -25,7 +25,7 @@ The only thing you need is to mark this class with
 [@BindTemplate](https://github.com/konsoletyper/teavm-flavour/blob/master/templates/src/main/java/org/teavm/flavour/templates/BindTemplate.java) 
 annotation which specifies relative path to template.
 The template is an HTML file that must be somewhere in project's resources (i.e. `src/main/resources` by convention).
-Additionally to regular HTML elements, template file may contain some extended elements provided by Flavour.
+In addition to regular HTML elements, the template file may contain some extended elements provided by Flavour.
 
 See this example:
 
@@ -62,10 +62,10 @@ public class Fibonacci {
 </ul>
 ```
 
-This example assumes you put template to `src/main/resources/templates/fibonacci.html`.
+This example assumes you put the template in `src/main/resources/templates/fibonacci.html`.
 
-This code does nothing.
-First, you should tell Flavour to render template.
+So far, this code does nothing.
+First, you should tell Flavour to render the template.
 Add the following method to the `Fibonacci` class:
 
 ```java
@@ -79,16 +79,16 @@ Of course, your master `index.html` should contain element with `application-con
 
 # Interacting with template engine
 
-The main entry point to template engine is 
+The main entry point to template engine is the
 [Templates](https://github.com/konsoletyper/teavm-flavour/blob/master/templates/src/main/java/org/teavm/flavour/templates/Templates.java) class.
 For basic usage you need only these methods:
 
-* `Templates.bind(Object, HTMLElement|String)` which binds instance of view class to the element of static HTML,
-  specified either as `HTMLElement` instance or by id.
+* `Templates.bind(Object, HTMLElement|String)` which binds an instance of view class to the element of static HTML,
+  specified either as an `HTMLElement` instance or by id.
 * `Templates.update()` forces updating of all bound templates.
   Usually, Flavour is smart enough to automatically update DOM.
   However, sometimes it does not know enough about your code, 
-  so you have to use this method to tell template engine to update explicitly.
+  so you have to use this method to tell the template engine to update explicitly.
   This includes situations when you work with timers.
   Remember, it's not very expensive to update DOM, 
   since Flavour performs dirty check and performs only as few DOM operations as possible.
