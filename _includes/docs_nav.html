@@ -12,8 +12,8 @@
         {% assign collapsed = false %}
       {% endif %}
     {% endfor %}
-    <div class="panel-collapse{% if collapsed %} collapse{% endif %}" id="collapse-{{forloop.index}}" role="tabpanel" aria-labelledby="headingOne">
-      <ul class="list-group">
+    <div class="panel-collapse{% if collapsed %} collapse{% endif %}" id="collapse-{{forloop.index}}" role="tabpanel" aria-label="Side Navigation">
+      <div class="list-group">
         {% for item in section.docs %}
           {% assign item_url = item | prepend:"/docs/" | append:".html" %}
           {% assign p = site.docs | where:"url", item_url | first %}
@@ -21,7 +21,7 @@
             <a class="list-group-item {% if item_url == page.url %}active{% endif %}" href="{{ p.url }}">{{ p.title }}</a>
           {% endunless %}
         {% endfor %}
-      </ul>
+      </div>
     </div>
   </div>
 {% endfor %}
