@@ -19,13 +19,13 @@ To create a new page you need two things:
 1. **View class** that describes data and behaviour of the page.
 2. **HTML template** that displays data.
 
-Flavour does not force you with a certain structure of the view class.
+Flavour does not force you to follow a certain structure in the view class.
 It can extend, implement anything you want, define any methods and fields, and so forth.
 The only thing you need is to mark this class with 
 [@BindTemplate](https://github.com/konsoletyper/teavm-flavour/blob/master/templates/src/main/java/org/teavm/flavour/templates/BindTemplate.java) 
-annotation which specifies relative path to template.
+annotation which specifies the relative path to template.
 The template is an HTML file that must be somewhere in project's resources (i.e. `src/main/resources` by convention).
-In addition to regular HTML elements, the template file may contain some extended elements provided by Flavour.
+In addition to regular HTML elements, the template file may contain extended elements provided by Flavour.
 
 See this example:
 
@@ -74,7 +74,7 @@ public static void main(String[] args) {
 }
 ```
 
-Of course, your master `index.html` should contain element with `application-content` identifier.
+Of course, your master `index.html` should contain an element with 'application-content' identifier (id="application-content").
 
 
 # Interacting with template engine
@@ -83,15 +83,15 @@ The main entry point to template engine is the
 [Templates](https://github.com/konsoletyper/teavm-flavour/blob/master/templates/src/main/java/org/teavm/flavour/templates/Templates.java) class.
 For basic usage you need only these methods:
 
-* `Templates.bind(Object, HTMLElement|String)` which binds an instance of view class to the element of static HTML,
+* `Templates.bind(Object, HTMLElement|String)` which binds an instance of view class to an element from a static HTML file,
   specified either as an `HTMLElement` instance or by id.
-* `Templates.update()` forces updating of all bound templates.
+* `Templates.update()` forces an update of all bound templates.
   Usually, Flavour is smart enough to automatically update DOM.
   However, sometimes it does not know enough about your code, 
   so you have to use this method to tell the template engine to update explicitly.
-  This includes situations when you work with timers.
+  This includes situations when you work with timers or background threads.
   Remember, it's not very expensive to update DOM, 
-  since Flavour performs dirty check and performs only as few DOM operations as possible.
+  since Flavour performs a dirty check and performs as few DOM operations as possible.
 * `Templates.create()` creates `Fragment` instance from given view object.
 
-There are some other methods, but they are intended for advanced usage, primarily for creating custom components
+There are some other methods, but they are intended for advanced usage, primarily for creating custom components.
