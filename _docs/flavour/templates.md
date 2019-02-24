@@ -16,10 +16,10 @@ This section describes the following topics:
 
 To create a new page you need two things:
 
-1. **View class** that describes data and behavior of the page.
+1. **View class** that describes data and behaviour of the page.
 2. **HTML template** that displays data.
 
-Flavour does not impose any constraints on the view class.
+Flavour does not force you to follow a certain structure in the view class.
 It can extend, implement anything you want, define any methods and fields, and so forth.
 The only thing you need is to mark this class with 
 [@BindTemplate](https://github.com/konsoletyper/teavm-flavour/blob/master/templates/src/main/java/org/teavm/flavour/templates/BindTemplate.java) 
@@ -74,7 +74,7 @@ public static void main(String[] args) {
 }
 ```
 
-Of course, your master `index.html` should contain element with `application-content` id.
+Of course, your master `index.html` should contain an element with 'application-content' identifier (id="application-content").
 
 
 # Interacting with template engine
@@ -84,7 +84,7 @@ The main entry point to template engine is the
 For basic usage you need only these methods:
 
 * `Templates.bind(Object, HTMLElement|String)` which binds an instance of view class to an element from a static HTML file,
-  specified either as an `HTMLElement` instance or by String id.
+  specified either as an `HTMLElement` instance or by id.
 * `Templates.update()` forces an update of all bound templates.
   Usually, Flavour is smart enough to automatically update DOM.
   However, sometimes it does not know enough about your code, 
