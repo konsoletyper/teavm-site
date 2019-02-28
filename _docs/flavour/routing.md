@@ -2,9 +2,11 @@
 title: Routing
 ---
 
-# Creating route interface
+Routing is a powerful Flavour feature that lets you easily create single-page web applications.
 
-The main purpose of routing library in Flavour is to provide a type-safe way to generate and parse URLs.
+# Creating a route interface
+
+The main purpose of the routing library in Flavour is to provide a type-safe way to generate and parse URLs.
 Thus, the first thing you have to do to start using routing is creating a **route interface**.
 
 Let's create a simple one:
@@ -28,11 +30,11 @@ Here, you can see all basic things:
 * Route interface must extend `Route`.
 * Route interface must be marked with `@PathSet`.
 * Route interface can only define `void` methods.
-* Each method must be marked with `@Path` annotation specifying path template.
-* To bind parameter to template, you should use `@PathParameter` annotation.
+* Each method must be marked with a `@Path` annotation specifying path template.
+* To bind a parameter to a template, you should use an `@PathParameter` annotation.
 
 
-# Creating application skeleton
+# Creating an application skeleton
 
 Our route interface is useless until we start using it, but we don't have any views to show.
 Let's create them:
@@ -126,9 +128,9 @@ public class GoodbyeView {
 
 # Binding URL hashes to pages
 
-Now we want to display pages as user changes URL in address bar.
-It's easy, we already have bound URLs to actions, but left these actions empty.
-Notice `index`, `hello` and `goodbye` methods of `Client` class, they don't do anything.
+Now we want to display pages as the user changes URL in address bar.
+It's easy, since we already have bound URLs to actions, but left these actions empty.
+Notice the `index`, `hello` and `goodbye` methods of the `Client` class don't do anything.
 Flavour calls these methods automatically on every URL update.
 Let's make these methods to do something useful:
 
@@ -153,15 +155,15 @@ The magic behind `setView` is simple: our base class, `ApplicationTemplate` take
 creates DOM fragments from them and supplies these fragments via `content` property,
 which we just displayed in `master.html`.
 
-You can run application and append `#/`, `#/hello/anonymous` and `#/goodbye` to test our new application.
+You can run the application and append `#/`, `#/hello/anonymous` and `#/goodbye` to test our new functionality.
 
 
 # Generating links
 
 There are two ways of generating links:
 
-* insert them to the web page;
-* generate them programmatically and manually update URL hash.
+* insert them into the web page;
+* generate them programmatically and manually update the URL hash.
 
 Let's update our application to use both ways.
 First, add following code to `IndexView`:
@@ -218,12 +220,12 @@ hello-a-b-c
 ```
 
 Both `firstName="a-b", secondName="c"` and `firstName="a", secondName="b-c"` are possible.
-Flavour applies greedy algorithm, so the first option will be returned.
+Flavour applies a greedy algorithm, so the first option will be returned.
 
 ## Using regular expressions
 
 For `String` path parameters it's possible to provide custom regular expressions.
-All you need is to put `@Pattern` annotation on a corresponding method parameter.
+All you need is to put the `@Pattern` annotation on a corresponding method parameter.
 
 ```java
     @Path("/hello/{name}")
@@ -231,14 +233,14 @@ All you need is to put `@Pattern` annotation on a corresponding method parameter
 ```
 
 
-This only affects parser, not generator.
+This only affects the parser, not the generator.
 
 ## Mapping to Java types
 
 Path parameters may have only following types:
 
 * **String**.
-* **byte**, **short**, **int**, **float**, **double**, either boxed and unboxed.
+* **byte**, **short**, **int**, **float**, **double**, either boxed or unboxed.
 * **BigInteger**, **BigDecimal**.
 * **java.util.Date**, 
   matches either date (`yyyy-MM-dd`) or timestamp (`yyyy-MM-ddThh:mm:ss`) format.
