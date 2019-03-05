@@ -2,8 +2,6 @@
 title: Routing
 ---
 
-Routing is a powerful Flavour feature that lets you easily create single-page web applications.
-
 # Creating a route interface
 
 The main purpose of the routing library in Flavour is to provide a type-safe way to generate and parse URLs.
