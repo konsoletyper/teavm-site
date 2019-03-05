@@ -138,6 +138,3 @@ Field state is available via the `Validation` class which has the following API:
 </v:validator>
 ```
 
-# Tip
-
-When building a Flavour UI that communicates with a JVM-based backend service, you can share validation logic.  Simply define the validation logic in a standalone module, and make it a dependency of both the Flavour UI and the backend service.  Then you can invoke the same logic from both the Flavour validation rules and the backend service methods.  You only have to write the validation logic once, and the validation rules are always in sync.
