@@ -8,17 +8,17 @@ Form validation components were designed with following goals in mind:
 
 * To be compatible with any UI library and CSS framework.
 * To not force users to follow certain guidelines, let them follow their guidelines instead.
-* To be type safe, as well as the whole framework.
+* To be type safe, like the rest of the framework.
 * To be flexible.
 
-Validation components are components for template engine,
+Validation components are components for the template engine,
 therefore they can only be used from HTML templates.
 
 
 # Usage
 
-To start using validation components, you should first include corresponding component package to template.
-Additionally, importing `Converter` interface may be useful:
+To start using validation components, you should first include the corresponding component package in the template.
+Additionally, importing the `Converter` interface may be useful:
 
 ```html
 <?import org.teavm.flavour.validation.Converter?>
@@ -46,13 +46,13 @@ It has the following syntax:
 
 Where:
 
-* `as="validationName""` name of variable that provides [validator state object](#validator-state).
-* `of="dataFieldN"` path to *mutable* field or property of a view object that stores actual data.
-* `as="fieldNameN"` name of variable that provides [field state object](#field-state)
-* `convert="converterN"` expression that yields `Converter` instance that should be used
+* `as="validationName""` name of the variable that provides [validator state object](#validator-state).
+* `of="dataFieldN"` path to a *mutable* field or property of a view object that stores actual data.
+* `as="fieldNameN"` name of the variable that provides [field state object](#field-state)
+* `convert="converterN"` expression that yields a `Converter` instance that should be used
   to convert data to and from string.
-* `rule="validationExpression"` expression that yields boolean value, `true` if validation passes.
-* `as="ruleName"` name of variable that provides `boolean` value which indicates whether the rule passes.
+* `rule="validationExpression"` expression that yields a boolean value, `true` if validation passes.
+* `as="ruleName"` name of the variable that provides a `boolean` value which indicates whether the rule passes.
 
 The second component, `bind`, is used to bind validations to input fields:
 
@@ -60,12 +60,12 @@ The second component, `bind`, is used to bind validations to input fields:
 v:bind="fieldName"
 ```
 
-where `fieldName` points to field state object defined by containing `v:validator`.
+where `fieldName` points to field state object defined by the containing `v:validator`.
 
 
 # Standard converters
 
-Standard converters are available via static methods of `Converter` interface:
+Standard converters are available via static methods of the `Converter` interface:
 
 * `Converter<String> stringFormat()` does not perform any conversion.
 * `Converter<Integer> integerFormat()`
@@ -73,26 +73,26 @@ Standard converters are available via static methods of `Converter` interface:
   where *formatString* is a string accepted by `DecimalFormat` class.
 * `Converter<Date> dateFormat(String formatString)`
   where *formatString* is a string accepted by `SimpleDateFormat` class.
-* `Converter<Date> dateFormat()` uses default locale-specific date format.
-* `Converter<Date> mediumDateFormat()` uses local-specific medium date format.
-* `Converter<Date> shortDateFormat()` uses local-specific medium date format.
-* `Converter<Date> shortDateFormat()` uses local-specific medium date format.
-* `Converter<Date> dateFormat(DateFormat dateFormat)` uses custom date format.
+* `Converter<Date> dateFormat()` uses the default locale-specific date format.
+* `Converter<Date> mediumDateFormat()` uses the locale-specific medium date format.
+* `Converter<Date> shortDateFormat()` uses the locale-specific medium date format.
+* `Converter<Date> shortDateFormat()` uses the locale-specific medium date format.
+* `Converter<Date> dateFormat(DateFormat dateFormat)` uses a custom date format.
   
   
 # Validator state
 
-Validator state is available via `ValidatorState` class which has the following API:
+Validator state is available via the `ValidatorState` class which has the following API:
 
-* `boolean isValid()` indicates whether form passed validation, i.e. all fields a valid. 
-* `void submit(Runnable action)` validates form and performs given action if form is valid.
+* `boolean isValid()` indicates whether the form passed validation, i.e. all fields are valid. 
+* `void submit(Runnable action)` validates the form and performs the given action if form is valid.
 
 
 # Field state
 
-Field state is available via `Validation` class which has the following API:
+Field state is available via the `Validation` class which has the following API:
 
-* `boolean isValidFormat()` indicates whether converter could successfully recognize value in a text field.
+* `boolean isValidFormat()` indicates whether the converter could successfully recognize value in a text field.
 * `boolean isValid()` indicates whether all validation rules pass.
 
 
@@ -137,3 +137,4 @@ Field state is available via `Validation` class which has the following API:
 
 </v:validator>
 ```
+
