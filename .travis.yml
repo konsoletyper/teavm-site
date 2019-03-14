@@ -13,6 +13,7 @@ sudo: false
 after_success: >
   if [[ "${TRAVIS_PULL_REQUEST:-unknown}" == "false" && $TRAVIS_BRANCH == master ]] ; then
     pushd _site
-    find . -type f -exec curl -P - -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {} $FTP_HOST/{} \;
+    echo "${SSH_KEY}" | base64 --decode >/tmp/sftp_rsa
+    scp -B -i /tmp/sftp_rsa . $FTP_USER@$FTP_HOST
     popd
   fi
