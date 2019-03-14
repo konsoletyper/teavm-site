@@ -14,6 +14,6 @@ after_success: >
   if [[ "${TRAVIS_PULL_REQUEST:-unknown}" == "false" && $TRAVIS_BRANCH == master ]] ; then
     pushd _site
     echo "${SSH_KEY}" | base64 --decode >/tmp/sftp_rsa
-    scp -B -i /tmp/sftp_rsa . $FTP_USER:$FTP_PASSWORD@$FTP_HOST
+    scp -B -r . $FTP_USER:$FTP_PASSWORD@$FTP_HOST
     popd
   fi
