@@ -14,6 +14,6 @@ after_success: >
   if [[ "${TRAVIS_PULL_REQUEST:-unknown}" == "false" && $TRAVIS_BRANCH == master ]] ; then
     pushd _site
     echo "${SSH_KEY}" | base64 --decode >/tmp/sftp_rsa
-    scp -o 'StrictHostKeyChecking no' -B -r -P $FTP_PORT ./* $FTP_USER@$FTP_HOST:~/$FTP_PATH
+    scp -o 'StrictHostKeyChecking no' -o 'PreferredAuthentications=password' -o 'PubkeyAuthentication=no' -B -r -P $FTP_PORT ./* $FTP_USER@$FTP_HOST:~/$FTP_PATH
     popd
   fi
