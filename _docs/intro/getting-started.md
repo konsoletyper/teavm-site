@@ -2,8 +2,8 @@
 title: Getting started
 ---
 
-There are several options of using TeaVM. One is Maven build.
-The easiest way to create a new TeaVM project is to type in the command line:
+There are several options for using TeaVM. One is a Maven build.
+The easiest way to create a new TeaVM project is to type in this command:
 
 ```bash
 mvn -DarchetypeCatalog=local \
@@ -16,9 +16,9 @@ Now you can execute `mvn clean package` and get the generated `war` file.
 Deploy this `war` in Tomcat or another container, or simply unzip it and open the `index.html` page.
 
 
-## Using Flavour framework
+## Using the Flavour framework
 
-Another option is to use Flavour, you should specify another archetype:
+Another option is to use Flavour by using another archetype:
 
 ```bash
 mvn archetype:generate \
@@ -35,7 +35,7 @@ After successful build you should be able to open `target/hello-1.0-SNAPSHOT/ind
 
 ## Further learning
 
-You can learn TeaVM by examples. There are several sources of examples:
+You can learn more about TeaVM from these examples:
  
 * [Application gallery](/gallery.html).
 * [Samples from TeaVM repository](https://github.com/konsoletyper/teavm/tree/master/samples).
