@@ -4,8 +4,8 @@ title: Components advanced topics
 
 # Making attributes optional
 
-To make attribute of an element component optional,
-you may add `@OptionalBinding` annotation to corresponding setter method.
+To make an attribute of an element component optional,
+you may add `@OptionalBinding` annotation to the corresponding setter method.
 For example:
 
 ```java
@@ -17,13 +17,13 @@ For example:
 ```
 
 
-# Exposing variables to body
+# Exposing variables to the body
 
-Component may compute some value and make it available to its body (i.e. fragment bound to `@BindContent`).
+A component may compute a value and make it available to its body (i.e. a fragment bound to `@BindContent`).
 You should use `@BindAttribute` for this purpose.
-Unlike parameters, which are represented by setter method with one parameter,
-variable methods must take zero parameter and return actual value of a variable.
-For example, look at [std:with](std-component-package#with) implementation:
+Unlike parameters, which are represented by setter methods with one parameter,
+variable methods must take zero parameters and return the actual value of a variable.
+For example, look at the [std:with](std-component-package#with) implementation:
 
 ```java
     @BindAttribute(name = "var")
@@ -52,9 +52,9 @@ For example, look at [std:with](std-component-package#with) implementation:
 
 Sometimes there is a component that can't function alone.
 For example, [std:choose](/docs/flavour/component-packages/std.html#choose) is implemented as
-one parent component and number of components for each clause.
-It's possible to create inner components applying `@BindElement` on methods.
-See this excerpt from `std:choose` implementation:
+one parent component and a child component for each clause.
+It's possible to create inner components by applying `@BindElement` to methods.
+See this excerpt from the `std:choose` implementation:
 
 ```java
     @BindElement(name = "option")
