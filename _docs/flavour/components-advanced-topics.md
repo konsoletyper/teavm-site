@@ -77,7 +77,7 @@ First, note that both `@BindAttributeComponent` and `@BindElement` accept arrays
 Second, names can be finished by `*` character, which means that given element or attribute name
 may be followed by any character sequence.
 
-To get the actual name of element or attribute used to bind component to DOM,
+To get the actual name of the DOM element or attribute bound to the component,
 create a method which takes single `String` parameter and mark it with `@BindElementName`.
 Example:
 
@@ -94,16 +94,16 @@ class MyComponent extends AbstractComponent {
 ```
 
 
-# Passing multiple parameters to attribute component
+# Passing multiple parameters to an attribute component
 
-Component bound to attribute is only limited to take one parameter.
+A Component bound to an attribute is limited to only one parameter.
 However, it's sometimes necessary to pass multiple parameters.
 In this case you need an intermediate class that holds values of these parameters.
 This class must be marked with `@SettingsObject` and define a setter for each parameter.
 
-To use such component, you should use JSON-like syntax to pass parameter values.
+To use such a component, you should use JSON-like syntax to pass parameter values.
 
-See the example:
+See this example:
 
 ```java
 @BindAttributeComponent(name = "my-component")
@@ -165,7 +165,7 @@ which can be used as follows:
 
 # Bidirectional binding
 
-You can emulate bidirectional binding by mapping same attribute or attribute content 
+You can emulate bidirectional binding by mapping the same attribute or attribute content 
 to two different component properties.
 Due to expression shortcuts (i.e. `param -> foo = param` and `() -> foo` both have a shorter form `foo`),
 Flavour will handle this case properly.
