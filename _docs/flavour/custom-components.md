@@ -4,9 +4,9 @@ title: Custom components
 
 # Creating a first component
 
-Let's create a simple component that does nothing more than displaying "Hello, world!".
+Let's create a simple component that does nothing more than display "Hello, world!".
 
-You are supposed to have `teavm-flavour-widgets` artifact in your project's dependencies.
+(Before starting, make sure the `teavm-flavour-widgets` artifact is in your project's dependencies.)
 
 First, create a new class called `HelloComponent`
 
@@ -25,13 +25,13 @@ public class HelloComponent extends AbstractWidget {
 }
 ```
 
-Second, create template file called `components/hello.html`:
+Second, create a template file called `components/hello.html`:
 
 ```html
 <div>Hello, world!</div>
 ```
 
-Third, create resource file called `META-INF/flavour/component-packages/example.components`:
+Third, create a resource file called `META-INF/flavour/component-packages/example.components`:
 
 ```
 HelloComponent
@@ -49,7 +49,7 @@ Now you should be able to use this component in your templates:
 # Adding parameters
 
 The component we just created does not do anything useful.
-Flavour component system is powerful with its ability to bind data to components.
+The Flavour component system has powerful features to bind data to components.
 Let's start using this ability by introducing parameters to our component.
 
 First, add the following method to `HelloComponent`:
@@ -73,13 +73,13 @@ First, add the following method to `HelloComponent`:
     }
 ```
 
-Second, modify template as follows:
+Second, modify the template as follows:
 
 ```html
 <div>Hello, <html:text value="name"/></div>
 ```
 
-Now you should be able to use this component like this:
+Now you should be able to pass a name parameter to the component like this:
 
 ```html
 <?use hello:example.components?>
@@ -90,7 +90,7 @@ Now you should be able to use this component like this:
 
 # Adding body
 
-We can go even further and allow our component to take HTML fragment as a parameter.
+We can go even further and allow our component to take an HTML fragment as a parameter.
 Add the following code to `HelloComponent`:
 
 ```java
@@ -115,7 +115,7 @@ Update your template:
 </div>
 ```
 
-And use the components as follows:
+And use the component as follows:
 
 ```html
 <hello:say-hello name="'anonymous'">
@@ -127,10 +127,10 @@ And use the components as follows:
 # Creating an attribute component
 
 Now we know how to create a new element component.
-Remember, Flavour allows to bind components to attributes.
+Remember, Flavour allows you to bind components to attributes too.
 Let's create one!
 
-First, create Java class:
+First, create the Java class:
 
 ```java
 import org.teavm.flavour.templates.BindAttributeComponent;
@@ -165,14 +165,14 @@ public class HelloAttributeComponent implements Renderable {
 }
 ```
 
-And update package catalog file:
+And update the package catalog file:
 
 ```
 HelloComponent
 HelloAttributeComponent
 ```
 
-You should be able to use newly created component like this:
+You should be able to use the newly created component like this:
 
 ```html
 <?use hello:example.components?>
