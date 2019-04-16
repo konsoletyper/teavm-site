@@ -35,7 +35,7 @@ After successful build you should be able to open `target/hello-1.0-SNAPSHOT/ind
 
 ## Further learning
 
-You can learn TeaVM by example. There are several sources of examples:
+You can learn more about TeaVM from these examples:
  
 * [Application gallery](/gallery.html).
 * [Samples from TeaVM repository](https://github.com/konsoletyper/teavm/tree/master/samples).
