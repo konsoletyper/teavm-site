@@ -21,15 +21,6 @@ If everything went OK, your project should look like this:
 ![A newly created project](project-explorer.png)
 
 
-Building the project
---------------------
-
-Simply click `Build Project` button (or press Ctrl+F9).
-IDEA will run the build.
-After build completes, you can find generated JavaScript files in `target/generated/js/teavm` folder.
-Edit your code and press `Build Project` button again, IDEA will update the JS file.
-
-
 Deploying to Tomcat
 -------------------
 
@@ -37,115 +28,75 @@ If you are developing a full stack web application, you may want to deploy your 
 
 Pick *Run* -> *Edit configurations...* from the main menu.
 Push *plus* button and choose *Tomcat Server* -> *Local*.
+
+![Tomcat run configuration](tomcat.png)
+
 Open *Deployment* tab of a newly created launch configuration and add a new artifact
 to the *Deploy at the server startup* list.
-Please, choose *exploded* artifact.
+Choose *exploded* artifact.
+Change application context to '/'.
+
+![Tomcat run configuration - Deployment tab](tomcat-deployment.png)
 
 Now run your launch configuration.
 IDEA automatically opens browser with your application.
-If everything is ok, you should see the text: `TeaVM generated element`.
+If everything is ok, you should see a blank page.
+TeaVM is still not configured, so there's no script that runs our logic.
 
 
-Doing some server logic
------------------------
+TeaVM development server
+------------------------
 
-Create the `Server` class in the corresponding package with following content
+To run TeaVM from IDEA, you can create a TeaVM development server.
 
-```java
-package my.pkg.name;
+Pick *Run* -> *Edit configurations...* from the main menu.
+Push *plus* button and choose *TeaVM development server*.
 
-import java.io.IOException;
+![Run configuration types](run-configuration-list.png)
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+Change following options:
 
-@WebServlet("/hello")
-public class Server extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+* **Main class** to your project's main class.
+* **Path to file** to `teavm`.
+* **Proxy URL** to `http://localhost:8080`.
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            return;
-        }
-        String userAgent = req.getHeader("User-Agent");
-        resp.getWriter().write("Hello, " + userAgent);
-    }
-}
-```
+![TeaVM development server](dev-server.png)
 
-In the *Run* tool window push *Update application* button and choose 
-*Redeploy* action.
-Follow `http://localhost:8080/hello` in the browser.
-If you saw the greeting message, everything is ok.
+Now run this launch configuration and open `http://localhost:9090`.
+You should see DOM content generated with your Java code.
+
+As you change the code and press 'Build' button, development server
+detects changed automatically and rebuilds your application,
+so you don't need to perform additional actions to update generated JavaScript.
+Simply press 'Refresh' button in the browser.
 
 
-Interacting with the server
----------------------------
+How it works
+------------
 
-Now you are ready to modify your application to send request to server and receive response.
-First, open `index.html` file modify its content:
+Development server is a small HTTP server that runs embedded TeaVM compiler inside.
+This compiler generates JavaScript in memory and serves it from the path you specified in settings.
+Additionally, the script may interact with the resources served by application server,
+which is on another address.
+To make these resources available to the script, development server also can act as a proxy
+server.
+Since we set *Proxy URL* to URL of application server, `index.html` becomes available from
+`http://localhost:9090/index.html`.
+It tries to load `/teavm/classes.js` file, which resolves to `http://localhost:9090/teavm/classes.js`.
+The latter resource is generated with TeaVM compiler.
 
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Hello web application</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <script type="text/javascript" charset="utf-8" src="teavm/runtime.js"></script>
-    <script type="text/javascript" charset="utf-8" src="teavm/classes.js"></script>
-  </head>
-  <body onload="main()">
-    <div><button id="hello-button">Hello, server</button></div>
-    <div id="hello-panel"></div>
-    <div id="thinking-panel" style="display:none"><i>Server is thinking...</i></div>
-    <div id="response-panel"></div>
-  </body>
-</html>
-```
 
-Second, add some TeaVM logic in the `Client` class:
+Debugging Java code
+-------------------
 
-```java
-package my.pkg.name;
 
-import org.teavm.jso.ajax.XMLHttpRequest;
-import org.teavm.jso.dom.html.HTMLButtonElement;
-import org.teavm.jso.dom.html.HTMLDocument;
-import org.teavm.jso.dom.html.HTMLElement;
+If you use Chrome, you can debug your Java code right from IDEA.
+You need to install [additional plugin](https://chrome.google.com/webstore/detail/teavm-debugger-agent/jmfipnkacgdmdhapfciejmfgfhfonfgl).
+Simply launch development server with *Debug* button instead of *Run* button and
+open `http://localhost:9090/index.html` in Chrome.
+Development server and Chrome plugin should detect each other and you'll see following
+indicator in Chrome:
 
-public class Client {
-    private static HTMLDocument document = HTMLDocument.current();
-    private static HTMLButtonElement helloButton = document.getElementById("hello-button").cast();
-    private static HTMLElement responsePanel = document.getElementById("response-panel");
-    private static HTMLElement thinkingPanel = document.getElementById("thinking-panel");
+![Chrome debugger indicator](chrome-debugger.png)
 
-    private Client() {
-    }
-
-    public static void main(String[] args) {
-        helloButton.listenClick(evt -> sayHello());
-    }
-
-    private static void sayHello() {
-        helloButton.setDisabled(true);
-        thinkingPanel.getStyle().setProperty("display", "");
-        XMLHttpRequest xhr = XMLHttpRequest.create();
-        xhr.onComplete(() -> {
-            responsePanel.appendChild(document.createElement("div").withText(xhr.getResponseText()));
-            helloButton.setDisabled(false);
-            thinkingPanel.getStyle().setProperty("display", "none");
-        });
-        xhr.open("GET", "hello");
-        xhr.send();
-    }
-}
-```
-
-Again, push *Update application* button and follow to the browser which should now
-show your application with working button.
+Now you can put breakpoints in Java code and refresh page.

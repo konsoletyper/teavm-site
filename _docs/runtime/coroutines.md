@@ -85,34 +85,6 @@ public class Ajax {
 }
 ```
 
-
-## `@Sync` annotation
-
-When method `X` calls coroutine `Y`, `X` becomes coroutine as well.
-Furthermore, all callers of `X` become coroutines.
-Async property gets propagated across call graph, from leaves to the root (i.e. to the `main` method).
-You can't force TeaVM to prevent methods from becoming coroutines,
-but you can mark several methods with `@Sync` annotation.
-In case these methods call coroutines, TeaVM reports error.
-You can rewrite this code manually to avoid such calls.
-For example, you can call coroutines in separate threads.
-
-Here's the example:
-
-```java
-@Sync
-static void foo() {
-    System.out.prinltln("Entering foo");
-    hello();  // <-- TeaVM will report error here
-    System.out.prinltln("Exiting foo");
-}
-
-static void hello() {
-    System.out.println(Ajax.get("http://localhost:8080/hello"));
-}
-```
-
-
 ## Interaction with JavaScript.
 
 Sometimes JavaScript API expects you to pass function.
@@ -129,11 +101,8 @@ See following example:
 static native <T, S> JsArray<S> map(JsArray<T> array, JsMapper<T, S> mapper);
 
 static JsArray<String> getAll(JsArray<String> urls) {
-    map(urls, url -> {  // <-- TeaVM reports error here
+    map(urls, url -> {  // <-- TeaVM throws exception here
         return Ajax.get(url);
     });
 }
 ```
-
-You may think of all JavaScript interop methods as automatically marked with
-`@Sync` annotation. 

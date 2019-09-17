@@ -12,9 +12,9 @@ issue_tracker: https://github.com/konsoletyper/teavm/issues
 
 bootwatch: readable
 
-teavm_version: 0.5.1
-flavour_version: 0.1.0
-teavm_branch: 0.5.x
+teavm_version: 0.6.0
+flavour_version: 0.2.0
+teavm_branch: 0.6.x
 
 # Build settings
 markdown: kramdown

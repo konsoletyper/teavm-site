@@ -31,9 +31,10 @@ The following example shows how to use it:
     System.out.println(b.foo + "," + b.bar);
 ```
 
-where MyClass is defined like this:
+where `MyClass` is defined like this:
 
 ```java
+@JsonPersistable
 public class MyClass {
     public String foo;
     public int bar;
@@ -45,6 +46,9 @@ The main entry points to the JSON API are two methods from the `JSON` class:
 `serialize` and `deserialize`.
 Both operate on JSON nodes represented by `Node` class,
 so some additional code is required to convert to and from string.
+
+Unlike normal Jackson, Flavour requires that all persistable classes are
+marked with `@org.teavm.flavour.json.JsonPersistable` annotation.
 
 
 # Supported subset of Jackson

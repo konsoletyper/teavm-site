@@ -28,6 +28,7 @@ and responds with integer number.
 Let's create a definition for the service:
 
 ```java
+@Resource
 @Path("math")
 public interface MathService {
     @GET
@@ -64,6 +65,8 @@ so, the whole thing looks like just calling `MathServiceImpl.sum()`.
 Writing JAX-RS services is out of scope this manual, and of scope of Flavour.
 There are many manuals and tutorials available.
 For example, you can read [this one](https://jersey.java.net/documentation/latest/getting-started.html).
+
+Note that service interface must be marked with `@org.teavm.flavour.rest.Resource` annotation.
 
 
 # Supported JAX-RS subset
