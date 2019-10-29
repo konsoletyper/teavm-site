@@ -95,3 +95,7 @@ For basic usage you need only these methods:
 * `Templates.create()` creates `Fragment` instance from given view object.
 
 There are some other methods, but they are intended for advanced usage, primarily for creating custom components.
+
+# Avoid Direct DOM Manipulation
+
+When you are using Flavour, it is best to avoid manipulating the DOM tree directly using the DOM API.  Since Flavour maintains an internal model of the DOM, changing the DOM directly makes its internal model out of sync, resulting in update issues.  Instead, use the Flavour standard components in templates, or create your own Flavour components.
