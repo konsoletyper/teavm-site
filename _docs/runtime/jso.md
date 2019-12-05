@@ -287,7 +287,7 @@ you can do the following:
 ```java
 final Window window = Window.current();
 Element element = window.getDocument().getElementById("my-elem");
-element.addListener("click", new EventListener() {
+element.addEventListener("click", new EventListener() {
     @Override
     public void handleEvent(Event evt) {
         window.alert(evt);
