@@ -74,7 +74,7 @@ Simply press 'Refresh' button in the browser.
 How it works
 ------------
 
-Development server is a small HTTP server that runs embedded TeaVM compiler inside.
+Development server is a small HTTP server that runs an embedded TeaVM compiler inside.
 This compiler generates JavaScript in memory and serves it from the path you specified in settings.
 Additionally, the script may interact with the resources served by application server,
 which is on another address.
