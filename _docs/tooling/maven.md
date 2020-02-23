@@ -49,7 +49,8 @@ Here is the list of properties supported by the goal:
 
 * **mainClass** &ndash; a fully qualified name of a class that contains the `main(String[])` method. 
   When this property specified, TeaVM produces `main` function in global scope that runs the translated
-  version of the the `main(String[])` method in the browser.
+  version of the the `main(String[])` method in the browser. There is no default value for this parameter.
+* **entryPointName** is the name of the method to be invoked in the main class. The default value is "main".
 * **targetDirectory** &ndash; a path to a directory where TeaVM produces all its output.
   The default value is `${project.build.directory}/javascript`.
 * **targetFileName** &ndash; a name of a produced JavaScript file. The default value is `classes.js`.
@@ -78,7 +79,7 @@ Here is the list of properties supported by the goal:
   The default value is `SEPARATE`, which means, that the `runtime.js` file is copied as a separate file.
   The `MERGED` value means that the entire body of the `runtime.js` file will be copied into the generated
   JavaScript file, specified by the **targetFileName**.
-  The `NONE` value means that the `runtime.js` file will not be copied at all.
+  The `NONE` value means that the `runtime.js` file will not be copied at all. This option does not exist in the source code.
 * **transformers** &ndash; an array of fully qualified class names.
   Each class must implement [ClassHolderTransformer](/javadoc/0.5.x/core/org/teavm/model/ClassHolderTransformer.html)
   interface and have a public no-argument constructor. These transformers are used to transform `ClassHolder`s,
@@ -91,5 +92,20 @@ Here is the list of properties supported by the goal:
     increase compilation time, sometimes can make code even slower; 
     recommended for WebAssembly.
 * **targetType** &ndash; what code to generate. Following options are supported:
-  * *JAVASCRIPT*
-  * *WEBASSEMBLY*
+  * *JAVASCRIPT* to generate JavaScript
+  * *WEBASSEMBLY* to generate WebAssembly.
+  
+  The default value is JAVASCRIPT.
+* **stopOnErrors** The default value is `true`.
+* **maxTopLevelNames** The default value is 10,000
+* **fastGlobalAnalysis**
+* **wasmVersion**
+* **minHeapSize**
+* **maxHeapSize**
+* **outOfProcess**
+* **processMemory**
+* **longjmpSupported**
+* **heapDump**
+
+
+
