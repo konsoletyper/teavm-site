@@ -11,8 +11,8 @@ This package includes following components:
 * [enabled](#enabled)
 * [change](#change)
 * [checked-change](#checked-change)
-* [bidir-value](#change)
-* [bidir-checked](#change)
+* [bidir-value](#bidir-value)
+* [bidir-checked](#bidir-checked)
 * [link](#link)
 
 
