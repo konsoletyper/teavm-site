@@ -36,6 +36,6 @@ Example:
 ```html
 <div event:click="visible = not visible">
   <div>Click me to toggle!</div>
-  <div attr:style="'display: ' + (visible ? 'block' : 'hidden')">Lorem ipsum ...</div>
+  <div attr:style="'display: ' + (visible ? 'block' : 'none')">Lorem ipsum ...</div>
 </div>
 ```
