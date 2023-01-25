@@ -1,0 +1,18 @@
+[versions]
+
+kotlin = "1.8.0"
+freemarker = "2.3.32"
+commonmark = "0.20.0"
+jackson = "2.14.2"
+
+
+[libraries]
+
+freemarker = { module = "org.freemarker:freemarker", version.ref = "freemarker" }
+commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
+jackson-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
+
+
+[plugins]
+
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

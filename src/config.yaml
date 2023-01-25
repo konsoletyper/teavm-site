@@ -1,0 +1,61 @@
+site:
+  name: TeaVM
+  email: info@teavm.org
+  forum: https://groups.google.com/forum/#!forum/teavm
+  issues: https://github.com/konsoletyper/teavm/issues
+  vcs: https://github.com/konsoletyper/teavm
+  githubPath: https://github.com/konsoletyper/teavm-site/edit/master/src/docs
+  pages:
+    - category: docs
+      name: Docs
+      path: /docs/intro/overview.html
+    - category: gallery
+      name: Gallery
+      path: /gallery.html
+  teavmVersion: 0.7.0
+  teavmDevVersion: 0.7.0-dev-1212
+  teavmBranch: 0.7.x
+
+documents:
+  - title: Introduction
+    path: intro
+    synthesized: true
+    children:
+      - title: Overview
+        path: intro/overview
+      - title: Getting started
+        path: intro/getting-started
+
+  - title: Runtime API
+    path: runtime
+    synthesized: true
+    children:
+      - title: Interacting with JavaScript
+        path: runtime/jso
+      - title: Coroutines
+        path: runtime/coroutines
+      - title: Metaprogramming API
+        path: runtime/metaprogramming
+      - title: Tuning Java class library
+        path: runtime/java-classes
+
+  - title: Tooling
+    path: tooling
+    synthesized: true
+    children:
+        - title: Using Maven
+          path: tooling/maven
+        - title: Using IDEA
+          path: tooling/idea
+        - title: Debugging
+          path: tooling/debugging
+
+gallery:
+  - title: JBox2D scene compiled with GWT and TeaVM
+    image: /img/examples/jbox2d.png
+    path: /gallery/jbox2d/index.html
+    source: https://github.com/konsoletyper/teavm/tree/master/samples/benchmark
+  - title: Calculator in Scala
+    image: /img/examples/scala-calculator.png
+    path: /gallery/scala-calculator.png
+    source: https://github.com/konsoletyper/teavm/tree/master/samples/scala

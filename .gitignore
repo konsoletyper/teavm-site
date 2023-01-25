@@ -1,5 +1,5 @@
-/_site
-/.sass-cache
-/.jekyll-metadata
+/output
 /.idea
-/teavm-site.iml
+/.gradle
+build
+/deploy-with-env.sh

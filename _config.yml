@@ -4,7 +4,7 @@ description: >
   A Java bytecode to JavaScript translator.
 
 baseurl: ""
-url: http://teavm.org
+url: https://teavm.org
 git_address: https://github.com/konsoletyper/teavm
 git_edit_address: https://github.com/konsoletyper/teavm-site/edit/master
 forum_address: https://groups.google.com/forum/#!forum/teavm
