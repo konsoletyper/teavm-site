@@ -57,5 +57,5 @@ gallery:
     source: https://github.com/konsoletyper/teavm/tree/master/samples/benchmark
   - title: Calculator in Scala
     image: /img/examples/scala-calculator.png
-    path: /gallery/scala-calculator.png
+    path: /gallery/scala-calculator/index.html
     source: https://github.com/konsoletyper/teavm/tree/master/samples/scala
