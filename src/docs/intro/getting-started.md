@@ -11,6 +11,40 @@ mvn -DarchetypeCatalog=local \
 Now you can execute `mvn clean package` and get the generated `war` file.
 Deploy this `war` in Tomcat or another container, or simply unzip it and open the `index.html` page.
 
+
+## Gradle
+
+Alternatively you can use TeaVM with gradle. Here's a minimal `build.gradle`:
+
+```groovy
+plugins {
+    id "java"
+    id "war"
+    id "org.teavm" version "0.8.0-dev-2"
+}
+repositories {
+    maven { url = uri("https://teavm.org/maven/repository") }
+    mavenCentral()
+}
+teavm.js {
+    addedToWebApp = true
+    mainClass = "fully.qualified.name.of.MainClass"
+}
+```
+
+and `settings.gradle`
+
+```groovy
+pluginManagement {
+    repositories {
+        maven { url = uri("https://teavm.org/maven/repository") }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+```
+
+
 ## Further learning
 
 You can learn more about TeaVM from these examples:

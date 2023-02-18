@@ -29,28 +29,22 @@ All you need is to put the following in your `pom.xml`:
 
 In `settings.gradle`
 
-```kotlin
+```groovy
 pluginManagement {
-  repositories {
-    maven { url = uri("https://teavm.org/maven/repository") }
-    mavenCentral()
-    gradlePluginPortal()
-  }
-}
-gradle.allprojects {
-  repositories {
-    maven { url = uri("https://teavm.org/maven/repository") }
-    mavenCentral()
-  }
+    repositories {
+        maven { url = uri("https://teavm.org/maven/repository") }
+        mavenCentral()
+        gradlePluginPortal()
+    }
 }
 ```
 
-or in `build.gradle`
+in `build.gradle`
 
-```kotlin
+```groovy
 repositories { 
-  maven { url = uri("https://teavm.org/maven/repository") }
-  mavenCentral()
+    maven { url = uri("https://teavm.org/maven/repository") }
+    mavenCentral()
 }
 ```
 
