@@ -20,7 +20,7 @@ Alternatively you can use TeaVM with gradle. Here's a minimal `build.gradle`:
 plugins {
     id "java"
     id "war"
-    id "org.teavm" version "0.8.0-dev-2"
+    id "org.teavm" version "${teavm_dev_version}"
 }
 repositories {
     maven { url = uri("https://teavm.org/maven/repository") }

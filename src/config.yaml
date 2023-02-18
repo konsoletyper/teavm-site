@@ -13,7 +13,7 @@ site:
       name: Gallery
       path: /gallery.html
   teavmVersion: 0.7.0
-  teavmDevVersion: 0.7.0-dev-1212
+  teavmDevVersion: 0.8.0-dev-1
   teavmBranch: 0.7.x
 
 documents:
@@ -47,6 +47,8 @@ documents:
     children:
         - title: Using Maven
           path: tooling/maven
+        - title: Using Gradle
+          path: tooling/gradle
         - title: Using IDEA
           path: tooling/idea
         - title: Debugging
