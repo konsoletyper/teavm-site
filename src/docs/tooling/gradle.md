@@ -200,3 +200,20 @@ Usually you may want to include them to dependencies of other tasks, for example
 ```groovy
 tasks.assemble.dependsOn(tasks.generateWasi)
 ```
+
+
+# Additional source set and configuration
+
+In case you need to write a web application with support of TeaVM,
+you may want to avoid presence of TeaVM-specific client libraries and class files in `war` file.
+For this purpose you can put your client code under `teavm` source set, i.e.
+in `src/teavm/java` (or `src/teavm/kotlin`, `src/teavm/scala` respectively) 
+instead of usual `src/main/java`.
+You can also put TeaVM-specific libraries into `teavm` configuration instead of `implementation`, for example:
+
+```groovy
+dependencies {
+    teavm(teavm.libs.jsoApis)
+}
+```
+
