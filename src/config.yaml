@@ -13,7 +13,7 @@ site:
       name: Gallery
       path: /gallery.html
   teavmVersion: 0.7.0
-  teavmDevVersion: 0.8.0-dev-1
+  teavmDevVersion: 0.8.0-dev-2
   teavmBranch: 0.7.x
 
 documents:
