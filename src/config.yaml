@@ -53,6 +53,8 @@ documents:
           path: tooling/idea
         - title: Debugging
           path: tooling/debugging
+        - title: Testing
+          path: tooling/testing
 
 gallery:
   - title: JBox2D scene compiled with GWT and TeaVM
