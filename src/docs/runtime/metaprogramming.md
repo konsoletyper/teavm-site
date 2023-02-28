@@ -22,14 +22,18 @@ Let's start by writing a method which reads field called `foo` or returns `null`
 
 ```java
     public static Object getFoo(Object obj) {
-        return getFoo(obj.getClass(), obj);
+        return getFooImpl(obj.getClass(), obj);
     }
 
     @Meta
     private static native Object getFooImpl(Class<?> cls, Object obj);
 
     private static void getFooImpl(ReflectClass<Object> cls, Value<Object> obj) {
-        var field = cls.getField("a");
+        if (!whitelist(cls)) {// TODO important to whitelist classes you are
+            unsupportedCase();// using in metaprogramming, otherwise it will
+            return;           // increase size of generated javascript dramatically
+        }                     // or lead to long compilation time
+        var field = cls.getField("foo");
         if (field != null) {
             exit(() -> field.get(obj));
         } else {
@@ -51,7 +55,7 @@ Note that only one argument can be of `ReflectClass` type.
 
 The second `getFooImpl` which has actual Java code is executed in run-time. It provides access to classes available
 to compiler via API which resembles Java reflection, with `Reflect` prefix added to each class. We use it
-to find a field called "a".
+to find a field called "foo".
 
 To get field's value and return it from method, we use `Metaprogramming.exit` (or just `exit`, since there's
 a convention to always statically import entire `Metaprogramming` class). This method takes lambda which will be
