@@ -1,7 +1,3 @@
-Currently, Gradle plugin only available in [preview builds](/docs/intro/preview-builds.html).
-This means that in order to run TeaVM in Gradle, you should add `https://teavm.org/maven/repository`
-both as plugin and dependency repositories.
-
 There are two Gradle plugins: one for TeaVM library, another for TeaVM application.
 TeaVM library plugin only helps with adding JavaScript interop dependencies to you project and with
 testing your Java code in the browser.

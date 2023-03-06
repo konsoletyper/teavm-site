@@ -12,9 +12,9 @@ site:
     - category: gallery
       name: Gallery
       path: /gallery.html
-  teavmVersion: 0.7.0
+  teavmVersion: 0.8.0
   teavmDevVersion: 0.8.0-dev-2
-  teavmBranch: 0.7.x
+  teavmBranch: 0.8.x
 
 documents:
   - title: Introduction
