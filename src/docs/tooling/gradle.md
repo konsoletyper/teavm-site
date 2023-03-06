@@ -7,7 +7,7 @@ To add TeaVM support to your project, add following code to `build.gradle`
 
 ```groovy
 plugins {
-    id "org.teavm" version "${teavm_dev_version}"
+    id "org.teavm" version "${teavm_version}"
 }
 ```
 
@@ -15,7 +15,7 @@ for application project or
 
 ```groovy
 plugins {
-    id "org.teavm.library" version "${teavm_dev_version}"
+    id "org.teavm.library" version "${teavm_version}"
 }
 ```
 
