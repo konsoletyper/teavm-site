@@ -1,6 +1,8 @@
-
 Due to number of reasons TeaVM does not rely on Java class library of host JVM.
 Instead, TeaVM comes with its own implementation of subset of Java class library.
+Of course, it's a subset of Java class library.
+The list of supported classes is available [here](/jcl-report/recent/jcl.html).
+
 Java class library was not designed for efficiency with AOT compiler producing code for a limited
 environment like JavaScript, that's why only a limited subset is available.
 Some of the classes in TeaVM don't behave 100% similar to JVM, for the sake of efficiency.
