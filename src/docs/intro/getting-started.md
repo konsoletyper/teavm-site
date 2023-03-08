@@ -20,27 +20,14 @@ Alternatively you can use TeaVM with gradle. Here's a minimal `build.gradle`:
 plugins {
     id "java"
     id "war"
-    id "org.teavm" version "${teavm_dev_version}"
+    id "org.teavm" version "${teavm_version}"
 }
 repositories {
-    maven { url = uri("https://teavm.org/maven/repository") }
     mavenCentral()
 }
 teavm.js {
     addedToWebApp = true
     mainClass = "fully.qualified.name.of.MainClass"
-}
-```
-
-and `settings.gradle`
-
-```groovy
-pluginManagement {
-    repositories {
-        maven { url = uri("https://teavm.org/maven/repository") }
-        mavenCentral()
-        gradlePluginPortal()
-    }
 }
 ```
 
