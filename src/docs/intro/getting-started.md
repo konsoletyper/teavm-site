@@ -1,3 +1,4 @@
+I think a direct link to the teavm-webapp could improve this page. (https://repo1.maven.org/maven2/org/teavm/teavm-maven-webapp/)
 There are several options for using TeaVM. One is a Maven build.
 The easiest way to create a new TeaVM project is to type in this command:
 
