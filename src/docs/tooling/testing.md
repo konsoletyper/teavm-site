@@ -84,7 +84,7 @@ Here is the list of available system properties:
 * `teavm.junit.wasm` &ndash; whether WebAssembly target is enabled (`true` or `false`).
 * `teavm.junit.wasm.runner` &ndash; how to run WebAssembly tests.
   Same as `teavm.junit.js.runner`, except for `htmlunit` value is not supported.
-* `teavm.junit.c` &ndash whether C target is enabled (`true` or `false`).
+* `teavm.junit.c` &ndash; whether C target is enabled (`true` or `false`).
 * `teavm.junit.c.compiler` &ndash; command that compiles C to native code.
   This is usually path to a *shell* file that takes `all.c` file in working directory 
   and produces `run_tests` binary from it.
