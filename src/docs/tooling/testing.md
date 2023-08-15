@@ -50,7 +50,7 @@ For maven include following configuration:
 
     <configuration>
       <systemProperties>
-        <teavm.junit.target>${project.build.directory}/js-tests</teavm.junit.target>
+        <teavm.junit.target>\${project.build.directory}/js-tests</teavm.junit.target>
         <teavm.junit.js.runner>browser-chrome</teavm.junit.js.runner>
       </systemProperties>
     </configuration>
