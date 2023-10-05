@@ -119,6 +119,9 @@ ul.site-navigation-list {
 .site-navigation-aux a.source-code::before {
   content: "\f09b";
 }
+.site-navigation-aux a.donate::before {
+  content: "\f155";
+}
 
 .product-header-container, .content-container {
   padding: 33px 15px;
@@ -176,6 +179,28 @@ ul.site-navigation-list {
 }
 .product-strong-parts > li > h1.efficient::before {
   content: "\f197";
+}
+
+.product-sponsors {
+  border-top: 1px solid #eee;
+  margin-top: 40px;
+  padding-top: 15px;
+}
+
+.product-sponsors > ul {
+  display: flex;
+  gap: 35px;
+}
+
+.product-sponsors > ul > li {
+  display: block;
+}
+
+.product-become-sponsor {
+  font-size: 150%;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 15px;
 }
 
 .documentation-content {

@@ -16,7 +16,7 @@
     <div class="content">
 
       <div class="product-what-is">
-        <h2 >What is TeaVM?</h2>
+        <h2>What is TeaVM?</h2>
         <blockquote>
           <p>TeaVM is an ahead-of-time compiler for Java bytecode
             that emits JavaScript and WebAssembly that runs in
@@ -47,6 +47,21 @@
           </p>
         </li>
       </ul>
+
+      <div class="product-sponsors">
+        <h2>Sponsors</h2>
+        <ul>
+          <li>
+            <a href="http://reportmill.com/">
+              <img src="sponsor-badges/reportmill.png" alt="ReportMill Software">
+            </a>
+          </li>
+        </ul>
+
+        <div class="product-become-sponsor">
+          <iframe src="https://github.com/sponsors/konsoletyper/button" title="Want to become a sponsor?" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+        </div>
+      </div>
 
     </div>
   </div>

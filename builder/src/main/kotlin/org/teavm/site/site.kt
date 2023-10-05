@@ -8,6 +8,7 @@ class Site {
   var forum: String = ""
   var issues: String = ""
   var vcs: String = ""
+  val donate: String = ""
   var pages: List<Page> = emptyList()
   var year: Int = Calendar.getInstance().get(Calendar.YEAR)
   var githubPath: String = "file://"
