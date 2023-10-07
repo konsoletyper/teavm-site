@@ -56,6 +56,11 @@
               <img src="sponsor-badges/reportmill.png" alt="ReportMill Software">
             </a>
           </li>
+          <li>
+            <a href="https://www.jdeploy.com/">
+              <img src="sponsor-badges/jdeploy.png" alt="jDeploy">
+            </a>
+          </li>
         </ul>
 
         <div class="product-become-sponsor">
