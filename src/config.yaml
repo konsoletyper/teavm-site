@@ -57,6 +57,15 @@ documents:
         - title: Testing
           path: tooling/testing
 
+  - title: Contributing
+    path: contributing
+    synthesized: true
+    children:
+      - title: General
+        path: contributing/general
+      - title: Testing
+        path: contributing/testing
+
 gallery:
   - title: JBox2D scene compiled with GWT and TeaVM
     image: /img/examples/jbox2d.png
