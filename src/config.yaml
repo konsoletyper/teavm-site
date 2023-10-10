@@ -26,6 +26,8 @@ documents:
         path: intro/overview
       - title: Getting started
         path: intro/getting-started
+      - title: Troubleshooting
+        path: intro/troubleshooting
       - title: Preview builds
         path: intro/preview-builds
 
