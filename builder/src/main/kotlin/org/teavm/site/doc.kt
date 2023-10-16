@@ -22,6 +22,7 @@ class Document @JsonCreator constructor(
 class DocumentNavigation(
   val title: String,
   val path: String,
+  val level: Int,
   val selected: Boolean,
   val children: List<DocumentNavigation> = emptyList()
 )

@@ -5,7 +5,7 @@
     <#else>
       <span>${data.title}</span>
     </#if>
-    <#if data.children?size gt 0 && data.selected>
+    <#if data.children?size gt 0 && data.selected && data.level lt 1>
         <ul>
           <#list data.children as child>
             <@node child current/>

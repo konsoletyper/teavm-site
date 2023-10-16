@@ -13,9 +13,9 @@ site:
     - category: gallery
       name: Gallery
       path: /gallery.html
-  teavmVersion: 0.8.1
-  teavmDevVersion: 0.9.0-dev-2
-  teavmBranch: 0.8.x
+  teavmVersion: 0.9.0
+  teavmDevVersion: 0.9.0-dev-15
+  teavmBranch: 0.9.x
 
 documents:
   - title: Introduction
@@ -30,6 +30,12 @@ documents:
         path: intro/troubleshooting
       - title: Preview builds
         path: intro/preview-builds
+      - title: Release notes
+        synthesized: true
+        path: release-notes
+        children:
+          - title: Release 0.9.0
+            path: release-notes/0.9.0
 
   - title: Runtime API
     path: runtime

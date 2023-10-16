@@ -121,14 +121,15 @@ private class DocumentGenerator(
   }
 
   private fun createNavigation(selectedDocument: Document): List<DocumentNavigation> {
-    return rootDocuments.map { createNavigation(it, selectedDocument) }
+    return rootDocuments.map { createNavigation(it, selectedDocument, 0) }
   }
 
-  private fun createNavigation(document: Document, selectedDocument: Document): DocumentNavigation {
-    val children = document.children.map { createNavigation(it, selectedDocument) }
+  private fun createNavigation(document: Document, selectedDocument: Document, level: Int): DocumentNavigation {
+    val children = document.children.map { createNavigation(it, selectedDocument, level + 1) }
     return DocumentNavigation(
       title = document.title,
       path = document.path,
+      level = level,
       selected = document == selectedDocument || children.any { it.selected },
       children = children
     )
