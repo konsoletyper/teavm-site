@@ -37,7 +37,6 @@ To use existing wrapper, you may also include the following
 
 ## Running JavaScript code from Java
 
-
 To execute JavaScript code, you should declare native method and mark it with [@JSBody](/javadoc/0.5.x/jso/core/org/teavm/jso/JSBody.html) annotation.
 `@JSBody` has two parameters.
 First, `params`, specifies which names in JavaScript correspond to parameters in Java, by position.
@@ -57,9 +56,36 @@ public static native void log(String message);
 * strings;
 * overlay types (see below);
 * array of transferable types.
+* `java.lang.Object`.
 
 Examples are: `int`, `boolean`, `short[][]`, `org.teavm.dom.html.HTMLElement[]`.
-The following types are invalid: `java.lang.Object`, `java.lang.Short[]`, `java.util.Date`, `java.util.List`.
+The following types are invalid: `java.lang.Short[]`, `java.util.Date`, `java.util.List`.
+
+### Using modules from `@JSBody`
+
+It's possible to import external modules to use in `@JSBody` scripts. For this purpose use `imports` parameter.
+
+For example, we have a module named `testModule.js`:
+
+```js
+export function foo() {
+    console.log("foo called");
+}
+```
+
+to access this function, you can write following declaration in TeaVM:
+
+```java
+@JSBody(
+        script = "return testModule.foo();",
+        imports = @JSBodyImport(
+                alias = "testModule",
+                fromModule = "testModule.js"))
+private static native int callModule();
+```
+
+Note that TeaVM still does not emit modern ES syntax. Instead, it produces ES5 wrapper, which is useful with
+node.js or webpack.
 
 
 ## Calling Java from JavaScript
@@ -276,14 +302,9 @@ public interface EventListener extends JSObject {
 you can do the following:
 
 ```java
-final Window window = Window.current();
+var window = Window.current();
 Element element = window.getDocument().getElementById("my-elem");
-element.addListener("click", new EventListener() {
-    @Override
-    public void handleEvent(Event evt) {
-        window.alert(evt);
-    }
-});
+element.addListener("click", evt -> window.alert(evt));
 ```
 
 
@@ -313,6 +334,31 @@ static void doWork() {
 ```
 
 
+## Passing arrays without copying
+
+By default, TeaVM copies all arrays in the gap between JavaScript and Java.
+To override this behaviour, use `@JSByRef` annotation on parameters or method.
+For example:
+
+```java
+@JSByRef
+@JSBody(script = "return new Int32Array(10);")
+private native int[] getArrayFromJS();
+
+@JSBody(params = "array", script = "console.log(array.byteLength);")
+private native void passArrayToJs(@JSByRef float[] array);
+```
+
+You should be careful when using `@JSByRef` with return type. In Java arrays never overlap, but using
+`@JSByRef` you can make TeaVM violate this contract:
+
+```java
+@JSByRef(params = "array", script = "return new Int8Array(array.buffer, 1);")
+private native byte[] subarray(@JSByRef byte[] array);
+```
+
+This can have unexpected consequences and non-obvious errors. Please, avoid this!
+
 ## Conversion rules
 
 JavaScript wrapper methods are limited to take and return the following *supported* types:
@@ -321,15 +367,51 @@ JavaScript wrapper methods are limited to take and return the following *support
 * `java.lang.String` which corresponds to JavaScript `String` object.
 * `T[]`, where T is a *supported* type, which corresponds to JavaScript array.
 * interface or class that implements [JSObject](/javadoc/${teavm_branch}/jso/core/org/teavm/jso/JSObject.html).
+* `java.lang.Object`.
 
 Notice that TeaVM won't check types before passing, so you need to design your wrappers carefully,
 so that no type violations occur in runtime.
 If you really require some type checking or casting, please implement them in JavaScript.
 
 
+## Passing data to JavaScript as `java.lang.Object`
+
+One important note about using `java.lang.Object` parameters in native methods is that it passes all data as is.
+This means, that if you pass `java.lang.String` or `java.lang.Double`, TeaVM will pass actual Java objects,
+which aren't useful from JavaScript. In order to pass strings and numbers, use corresponding JavaScript
+wrappers, i.e. `JSString` or `JSNumber`. 
+
+For example, consider you have the following declaration:
+
+```java
+interface A extends JSObject {
+  void foo(Object o);
+}
+```
+
+then, you can pass data to foo as following:
+
+```java
+void test(A a) {
+  a.foo(23); // passes Java object, which is not useful from JS method foo
+  a.foo(JSNumber.valueOf(23)); // passes actual JS number
+}
+```
+
+This mechanism is primarily designed for passing to JavaScript data, which you then would want to
+retrieve, for examples, for storing Java objects in JS collections or using Java objects in promises, etc.
+
+
 ## Dynamic type casting
 
-TeaVM does not support `instanceof` operator with `JSObject`.
+TeaVM only supports partially `instanceof` operator with `JSObject`.
+It won't distinguish between actual subtypes of `JSObject`.
+Say, you have classes `A` and `B` that both implement `JSObject`, so either `instanceof A` or
+`instanceof B` will have the same effect as `instanceof JSObject`.
+However, `instanceof JSObject` distinguishes between JS and Java objects.
+For example: following is false: `new Object() instanceof JSObject`.
+This also same for casting and calling `getClass`.
+
 Please, use another mechanisms to determine actual type of your JavaScript wrappers.
 For example, to get actual type of [Node](/javadoc/${teavm_branch}/jso/apis/org/teavm/jso/dom/xml/Node.html),
 use [getNodeType()](/javadoc/${teavm_branch}/jso/apis/org/teavm/jso/dom/xml/Node.html#getNodeType%28%29) method
