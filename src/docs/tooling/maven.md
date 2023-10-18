@@ -45,7 +45,7 @@ Here is the list of properties supported by the goal:
 
 * **mainClass** &ndash; a fully qualified name of a class that contains the `main(String[])` method. 
   When this property specified, TeaVM produces `main` function in global scope that runs the translated
-  version of the the `main(String[])` method in the browser.
+  version of the `main(String[])` method in the browser.
 * **targetDirectory** &ndash; a path to a directory where TeaVM produces all its output.
   The default value is `\${project.build.directory}/javascript`.
 * **targetFileName** &ndash; a name of a produced JavaScript file. The default value is `classes.js`.
@@ -70,11 +70,6 @@ Here is the list of properties supported by the goal:
   The default value is `\${project.build.outputDirectory}`. The default value should be used in most cases.
 * **properties** &ndash; properties, in standard Maven properties format, that will be passed to the TeaVM builder.
   These properties are available to TeaVM plugins.
-* **runtime** (`SEPARATE`|`MERGED`|`NONE`) &ndash; how the `runtime.js` file should be copied.
-  The default value is `SEPARATE`, which means, that the `runtime.js` file is copied as a separate file.
-  The `MERGED` value means that the entire body of the `runtime.js` file will be copied into the generated
-  JavaScript file, specified by the **targetFileName**.
-  The `NONE` value means that the `runtime.js` file will not be copied at all.
 * **transformers** &ndash; an array of fully qualified class names.
   Each class must implement [ClassHolderTransformer](/javadoc/${teavm_branch}/core/org/teavm/model/ClassHolderTransformer.html)
   interface and have a public no-argument constructor. These transformers are used to transform `ClassHolder`s,
@@ -89,3 +84,5 @@ Here is the list of properties supported by the goal:
 * **targetType** &ndash; what code to generate. Following options are supported:
   * *JAVASCRIPT*
   * *WEBASSEMBLY*
+  * *WEBASSEMBLY_WASI*
+  * *C*

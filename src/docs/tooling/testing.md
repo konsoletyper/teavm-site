@@ -15,16 +15,14 @@ Gradle plugins do it automatically, for Maven you should add following dependenc
 </dependency>
 ```
 
-Second, you should put `@RunWith(TeaVMTestRunner.class)` and `@WholeClassCompilation` annotations
-on your test classes. 
-The second annotation is not necessary, it only allows to improve compilation time.
-If for some reason you want each test method to be compiled in a separate VM,
-you may avoid this annotation.
+Second, you should put `@RunWith(TeaVMTestRunner.class)`
+If for some reason you want each test method to be compiled in a separate VM, you may also annotate class with
+`@EachTestCompiledSeparately`. This can be necessary if you are testing custom TeaVM plugins or using 
+metaprogramming API.
 Example:
 
 ```java
 @RunWith(TeaVMTestRunner.class)
-@WholeClassCompilation
 public class SimpleTest {
     @Test
     public void simpleFields() {
@@ -37,6 +35,10 @@ public class SimpleTest {
 
 You can additionally put `@JvmSkip` annotation on class or on individual methods if you want
 tests run only in JS (or other TeaVM target).
+
+In multi-platform project you can additionally ignore tests (either single methods of whole classes)
+with `@SkipPlatform`. There's also opposite `@OnlyPlatform` which enumerates only platforms
+that are supported by test.
 
 Finally, you need to specify additional system properties to JUnit runner.
 For maven include following configuration:
@@ -76,7 +78,7 @@ Here is the list of available system properties:
 * `teavm.junit.js` &ndash; whether JS target is enabled (`true` or `false`).
   JS target is enabled by default.
 * `teavm.junit.js.runner` &ndash; how to run JS tests.
-  Available values: `htmlunit`, `browser`, `browser-chrome`, `browser-firefox`, `none`.
+  Available values: `browser`, `browser-chrome`, `browser-firefox`, `none`.
   None means that only JavaScript files will be generated without attempt to run them.
   `browser` value will print link to stdout, that you should open in a browser.
 * `teavm.junit.js.decodeStack` &ndash; controls stack trace deobfuscation (`true` or `false`).
