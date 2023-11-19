@@ -83,3 +83,7 @@ gallery:
     image: /img/examples/scala-calculator.png
     path: /gallery/scala-calculator/index.html
     source: https://github.com/konsoletyper/teavm/tree/master/samples/scala
+  - title: Software 3D renderer in Kotlin
+    image: /img/examples/software3d.png
+    path: /gallery/software3d/index.html
+    source: https://github.com/konsoletyper/teavm/tree/master/samples/software3d
