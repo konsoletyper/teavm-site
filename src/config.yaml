@@ -46,6 +46,8 @@ documents:
     children:
       - title: Interacting with JavaScript
         path: runtime/jso
+      - title: Creating JavaScript modules
+        path: runtime/js-modules
       - title: Coroutines
         path: runtime/coroutines
       - title: Metaprogramming API
