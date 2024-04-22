@@ -98,7 +98,7 @@ Note that library plugin only supports `tests` section.
   `false` by default.
 * `processMemory: Int` &ndash; in case TeaVM is executed in a separate process, how many memory, in megabytes,
   should be given to this process.
-* `outputDir: File` &ndash; output directory. Default value is `$buildDir/generated/teavm`.
+* `outputDir: Directory` &ndash; output directory. Default value is `$buildDir/generated/teavm`.
 
 
 ### Additional configuration properties
@@ -119,11 +119,27 @@ Note that library plugin only supports `tests` section.
 * `entryPointName: String` (JS) &ndash; main of JavaScript function that starts the main method.
   Note that it does not affect the name or the signature of a main method in Java sources (which is always `main`). 
   Default value is `main`.
+* `relativePathInOutputDir` (JS, Wasm) &ndash; directory, relative to `outputDir`, where generated files
+  will be written. Default value is `js` for JS backend and `wasm` for WebAssembly backend.
 * `targetFileName: String` (JS, Wasm, WASI) &ndash; name of target file. Default value is 
   `\${projectName}.js` or `\${projectName}.wasm` respectively.
 * `addedToWebApp: Boolean` (JS, Wasm) &ndash; used in conjunction with `war` plugin.
   Adds corresponding TeaVM task as a dependency to WAR tasks and includes TeaVM output into generated `.war` file.
   Default value is `false`.
+* `maxTopLevelNames: Int` (JS) &ndash; how many names to generate at top-level. All other declarations
+  are generated as properties of some additional object. The reason to limit the number of top-level declarations
+  is the bug in Chromium-based browser that throw stack overflow error.
+* `sourceFilePolicy: SourceFilePolicy` (JS) &ndash; declares how to produce paths to source files 
+  when source maps generated. Possible values:
+  * `DO_NOTHING` &ndash; provide path to source files as is without any resolution. In this case developer
+    must ensure themselves that source files are served together with generated file. 
+  * `COPY` &ndash; copies sources to the output directory.
+  * `LINK_LOCAL_FILES` &ndash; when possible, generate `file://` urls with paths in local file system.
+* `moduleType: JSModuleType` (JS) &ndash; which type of JavaScript module to use:
+  * `COMMON_JS` &ndash; CommonJS (copatible with node.js);
+  * `UMD` &ndash; UMD (automatically detect, at run time, AMD or CommonJS module system; behave as IIF otherwise);
+  * `NONE` &ndash; no module system, all code placed in immediately-invoked function (IIF);
+  * `ES2015` &ndash; [ES2015 module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 * `minHeapSize: Int` (Wasm, WASI, C) &ndash; minimal (initial) heap size, in megabytes, of resulting virtual machine.
   Default value is `1`.
 * `maxHeapSize: Int` (Wasm, WASI, C) &ndash; maximal heap size, in megabytes, of resulting virtual machine.
@@ -219,3 +235,52 @@ dependencies {
 }
 ```
 
+
+# JavaScript development server
+
+In additional to normal build, the development server can be used to improve developer's experience.
+Development server is a separate process that keeps running between builds and serves files via HTTP protocol.
+This allows the development server to cache compiler structures between rebuilds and thus speed up
+subsequent builds. Also, development server injects some additional metadata that allow to deobfuscate
+stack traces on-the-fly. Finally, development server serves source maps together with source files,
+which can improve debugging experience.
+
+To start development server, configure it using following DSL:
+
+```groovy
+teavm {
+  js {
+    devServer {
+      port = port_number
+      // .. other values
+    }
+  }
+}
+```
+
+or shorter
+
+```groovy
+teavm.js.devServer {
+  // configuration properties here
+}
+```
+
+and run `javaScriptDevServer`. The generated file will be served from 
+`http://localhost:${port}/${relativePathInOutDir}/${targetFileName}.js`, where placeholders correspond to
+configuration properties. Subsequence runs of the same task will just instruct server to re-build JavaScript file.
+
+To stop server process, run `stopJavaScriptDevServer` task.
+
+Available configuration properties:
+
+* `stackDeobfuscated` &ndash; whether all JS stacks should be deobfuscated and proper Java stack traces
+  generated.
+* `indicator` &ndash; injects a small indicator in the lower-left corner of the page to
+  display compilation progress right in the wev page.
+* `autoReload` &ndash; indicates whether page should be reloaded as soon as compilation completes.
+* `processMemory` &ndash; amount of memory, in megabytes, to allocate for server process.
+* `proxyUrl` &ndash; when specified, development server will not only serve generated JavaScript, 
+  but also proxy all incoming requests to given URL. 
+* `proxyPath` &ndash; used in conjunction with `proxyUrl`. When specified, only requests starting with
+  specified path, will be proxied.

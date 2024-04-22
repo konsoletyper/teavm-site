@@ -86,3 +86,8 @@ Here is the list of properties supported by the goal:
   * *WEBASSEMBLY*
   * *WEBASSEMBLY_WASI*
   * *C*
+* **jsModuleType** &ndash; which type of JavaScript module to use:
+  * *COMMON_JS* &ndash; CommonJS (copatible with node.js);
+  * *UMD* &ndash; UMD (automatically detect, at run time, AMD or CommonJS module system; behave as IIF otherwise);
+  * *NONE* &ndash; no module system, all code placed in immediately-invoked function (IIF);
+  * *ES2015* &ndash; [ES2015 module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). 
