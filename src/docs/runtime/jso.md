@@ -50,17 +50,6 @@ Example:
 public static native void log(String message);
 ```
 
-`@JSBody` method is restricted to take and return only values of the following types, called transferable types:
-
-* primitives, except for `long`;
-* strings;
-* overlay types (see below);
-* array of transferable types.
-* `java.lang.Object`.
-
-Examples are: `int`, `boolean`, `short[][]`, `org.teavm.dom.html.HTMLElement[]`.
-The following types are invalid: `java.lang.Short[]`, `java.util.Date`, `java.util.List`.
-
 ### Using modules from `@JSBody`
 
 It's possible to import external modules to use in `@JSBody` scripts. For this purpose use `imports` parameter.
@@ -80,13 +69,11 @@ to access this function, you can write following declaration in TeaVM:
         script = "return testModule.foo();",
         imports = @JSBodyImport(
                 alias = "testModule",
-                fromModule = "testModule.js"))
+                fromModule = "testModule.js"
+        )
+)
 private static native int callModule();
 ```
-
-Note that TeaVM still does not emit modern ES syntax. Instead, it produces ES5 wrapper, which is useful with
-node.js or webpack.
-
 
 ## Calling Java from JavaScript
 
@@ -122,18 +109,16 @@ Overlay types allow to talk with JavaScript in terms of objects.
 However, as JSO is built upon Java, overlay objects are almost regular Java objects,
 so you get all advantages of static type system, IDE support, javadoc, etc.
 
-An overlay type is an abstract class or an interface that meets the following conditions:
+An overlay type is a class or an interface that meets the following conditions:
 
-* It must extend or implement [JSObject](/javadoc/${teavm_branch}/jso/core/org/teavm/jso/JSObject.html) interface,
-  directly or indirectly.
+* It must extend or implement [JSObject](/javadoc/${teavm_branch}/jso/core/org/teavm/jso/JSObject.html) interface, directly or indirectly.
 * It must not have member fields.
-* All of its methods are either abstract or static or final; no member methods with implementation are allowed.
 * Final member methods must not implement or override parent method.
 * In case of abstract class, it should extend either another overlay abstract class or `java.lang.Object`.
-* Abstract class should not declare constructor.
+* If it's non-abstract class, it should be annotated with `@JSClass`.
 
-By default, each abstract method of an overlay class is mapped to a corresponding method of JavaScript, i.e. when you
-call a Java method, the JavaScript method of the same name is actually called.
+By default, each abstract or native method of an overlay class is mapped to a corresponding method of JavaScript,
+i.e. when you call a Java method, the JavaScript method of the same name is actually called.
 Parameters are converted before invocation to JavaScript and return value is converted back to Java.
 
 For example,
@@ -173,10 +158,10 @@ public interface HTMLElement extends Element {
 ```
 
 
-## Non-abstract methods
+## Extension methods
 
-You can embed your custom logic to existing JavaScript object by declaring methods in overlay objects
-declared via abstract classes or via Java 8 default methods.
+You can embed your custom logic to existing JavaScript object by declaring non-abstract non-native methods 
+in overlay types.
 These methods, however, have additional restriction: they should not override methods of a parent class or interface.
 *Please, note that the current version of TeaVM does not validate this, so you violate this restriction on your
 risk*. Future versions of TeaVM will check this rule properly.
@@ -184,27 +169,11 @@ risk*. Future versions of TeaVM will check this rule properly.
 Example:
 
 ```java
-public abstract class HTMLElement implements JSObject {
-    @JSProperty
-    public abstract CSSStyleDeclaration getStyle();
-
-    public void hide() {
-        getStyle().setProperty("display", "none");
-    }
-
-    public void show() {
-        getStyle().removeProperty("display");
-    }
-}
-```
-
-Or the same in Java 8:
-
-```java
 public interface HTMLElement extends JSObject {
     @JSProperty
     CSSStyleDeclaration getStyle();
 
+    // Subtypes can't override these methods
     default void hide() {
         getStyle().setProperty("display", "none");
     }
@@ -215,7 +184,7 @@ public interface HTMLElement extends JSObject {
 }
 ```
 
-Also, you can declare `native` methods in abstract classes. Rewrite our example this way:
+Also, you can declare `@JSBody` methods in abstract classes. Rewrite our example this way:
 
 ```java
 public abstract class HTMLElement implements JSObject {
@@ -234,18 +203,23 @@ Overlay classes can declare static methods, either with Java or JavaScript imple
 Example:
 
 ```java
-public abstract class JSArray<T extends JSObject> implements JSObject {
-    @JSBody(params = { "size" }, script = "return new Array(size);")
-    public static <S extends JSObject> native JSArray<S> create(int size);
+@JSClass("Array")
+public class JSArray<T extends JSObject> implements JSObject {
+    public JSArray() {
+    }
 
-    public static <S extends JSObject> JSArray<S> create(
+    // Does not exist in JS Array, implemented on Java side 
+    public static <S extends JSObject> JSArray<S> of(
             Collection<S> elements) {
-        var array = create<S>(elements.size());
+        var array = new JSArray<S>(elements.size());
         for (int i = 0; i < elements.size(); ++i) {
             array.set(i, elements.get(i));
         }
         return array;
     }
+
+    // Wraps JS method Array.isArray
+    public static native boolean isArray(Object object);
 }
 ```
 
@@ -359,60 +333,119 @@ private native byte[] subarray(@JSByRef byte[] array);
 
 This can have unexpected consequences and non-obvious errors. Please, avoid this!
 
+
+## Defining top-level functions and properties
+
+You can also define top-level functions and properties using `@JSTopLevel` with `static` class methods.
+For example:
+
+```java
+public class Window {
+  @JSTopLevel
+  public static native String atob(String s);
+
+  @JSTopLevel
+  public static native String btoa(String s);
+  
+  @JSTopLevel
+  @JSProperty
+  public static native HTMLDocument getDocument();
+}
+```
+
+## Importing declarations from module
+
+You can import classes, functions and properties from external modules.
+To do so, annotate corresponding elements with `@JSModule`.
+For example:
+
+```java
+@JSClass
+@JSModule("./myModule.js")
+public class ImportedClass implements JSObject {
+}
+```
+
+```java
+@JSClass
+public class ImportedDeclarations implements JSObject {
+  @JSTopLevel
+  @JSModule("./myModule.js")
+  public static native void someFunction();
+
+  @JSTopLevel
+  @JSProperty
+  @JSModule("./myModule.js")
+  public static native String getSomeProperty();
+}
+```
+
 ## Conversion rules
 
-JavaScript wrapper methods are limited to take and return the following *supported* types:
+TeaVM automatically converts from and to JS following types:
 
 * `boolean`, `byte`, `short`, `int`, `float`, `double` which correspond to JavaScript numeric values.
 * `java.lang.String` which corresponds to JavaScript `String` object.
-* `T[]`, where T is a *supported* type, which corresponds to JavaScript array.
-* interface or class that implements [JSObject](/javadoc/${teavm_branch}/jso/core/org/teavm/jso/JSObject.html).
-* `java.lang.Object`.
+* arrays of objects and primitives listed above.
 
-Notice that TeaVM won't check types before passing, so you need to design your wrappers carefully,
-so that no type violations occur in runtime.
-If you really require some type checking or casting, please implement them in JavaScript.
+TeaVM **does not** convert Java collections and primitive wrappers.
+Additionally, TeaVM only performs conversion when type is directly known from method's signature.
+This means that with generics you won't get expected results, because type arguments from generics
+only known at compile time.
 
-
-## Passing data to JavaScript as `java.lang.Object`
-
-One important note about using `java.lang.Object` parameters in native methods is that it passes all data as is.
-This means, that if you pass `java.lang.String` or `java.lang.Double`, TeaVM will pass actual Java objects,
-which aren't useful from JavaScript. In order to pass strings and numbers, use corresponding JavaScript
-wrappers, i.e. `JSString` or `JSNumber`. 
-
-For example, consider you have the following declaration:
+In following example TeaVM is able to convert JS string to `java.lang.String`:
 
 ```java
-interface A extends JSObject {
-  void foo(Object o);
+private static void test() {
+  System.out.println(read());
 }
+
+@JSBody(script = "return document.getElementById('value-input').value;")
+private static native String read();
 ```
 
-then, you can pass data to foo as following:
+however, with generics TeaVM will produce `ClassCastException` on runtime:
 
 ```java
-void test(A a) {
-  a.foo(23); // passes Java object, which is not useful from JS method foo
-  a.foo(JSNumber.valueOf(23)); // passes actual JS number
+private static void test() {
+    readAsync().then(value -> System.out.println(value));
 }
+
+private static native JSPromise<String> readAsync();
 ```
 
-This mechanism is primarily designed for passing to JavaScript data, which you then would want to
-retrieve, for examples, for storing Java objects in JS collections or using Java objects in promises, etc.
+the right way to fix this is to declare JS wrapper as the type argument:
+
+```java
+private static void test() {
+    readAsync().then(value -> System.out.println(value.stringValue()));
+}
+
+private static native JSPromise<JSString> readAsync();
+```
 
 
 ## Dynamic type casting
 
-TeaVM only supports partially `instanceof` operator with `JSObject`.
-It won't distinguish between actual subtypes of `JSObject`.
-Say, you have classes `A` and `B` that both implement `JSObject`, so either `instanceof A` or
-`instanceof B` will have the same effect as `instanceof JSObject`.
-However, `instanceof JSObject` distinguishes between JS and Java objects.
-For example: following is false: `new Object() instanceof JSObject`.
-This also same for casting and calling `getClass`.
+TeaVM only supports `instanceof` against non-interface overlay types.
+The reason is that there's no such thing as "interface" in JavaScript.
+Some APIs in JavaScript declare that they consume or produce an object with given properties,
+but this object should not necessarily extend some class.
+Due to duck typing in JavaScript, there's no need to declare interfaces.
 
-Please, use another mechanisms to determine actual type of your JavaScript wrappers.
-For example, to get actual type of [Node](/javadoc/${teavm_branch}/jso/apis/org/teavm/jso/dom/xml/Node.html),
-use [getNodeType()](/javadoc/${teavm_branch}/jso/apis/org/teavm/jso/dom/xml/Node.html#getNodeType%28%29) method
-instead of `instanceof`.
+To express such APIs in statically typed Java, you can use interfaces, but these interfaces don't exist on runtime.
+Additionally, you may want to express such "anonymous" JavaScript object with abstract classes.
+In this case you can prevent TeaVM from inserting type checks for such classes 
+by adding `@JSClass(transparent = true)`.
+For example:
+
+```java
+// `instanceof SomeClass` will always produce true
+@JSClass(transparent = true)
+public abstract class SomeClass {
+    public abstract void foo();
+    
+    @JSProperty
+    public abstract String getBar();
+}
+```
