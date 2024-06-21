@@ -92,3 +92,7 @@ gallery:
     image: /img/examples/software3d.png
     path: /gallery/software3d/index.html
     source: https://github.com/konsoletyper/teavm/tree/master/samples/software3d
+  - title: Commodore 64 emulator (JSIDPlay2)
+    image: /img/examples/commodore64.png
+    path: https://haendel.ddns.net:8443/static/teavm/c64jukebox.vue?teavmFormat=JS
+    source: https://sourceforge.net/p/jsidplay2/code/HEAD/tree/
