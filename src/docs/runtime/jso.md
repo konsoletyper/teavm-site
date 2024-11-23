@@ -134,7 +134,7 @@ public interface Node extends JSObject {
 ```
 
 
-## Wrapping properties
+## Mapping properties
 
 To access JavaScript properties from Java, you should declare getter and setter methods, both optional.
 Getters and setters must satisfy Java Beans naming conventions.
@@ -154,6 +154,23 @@ public interface HTMLElement extends Element {
     void setTitle(String title);
 
     //...
+}
+```
+
+## Mapping constructors
+
+To map a JS constructor into Java, just declare non-abstract class, annotate it with `@JSClass` and
+define constructors (their body may be either empty or contain some logic; in latter case TeaVM will
+ignore any code inside constructor). For example:
+
+```java
+@JSClass
+public class Int8Array extends ArrayBufferView {
+  public Int8Array(int length) {
+  }
+  public Int8Array(ArrayBuffer buffer) {
+  }
+  // etc
 }
 ```
 
@@ -277,7 +294,7 @@ you can do the following:
 
 ```java
 var window = Window.current();
-Element element = window.getDocument().getElementById("my-elem");
+var element = window.getDocument().getElementById("my-elem");
 element.addListener("click", evt -> window.alert(evt));
 ```
 
