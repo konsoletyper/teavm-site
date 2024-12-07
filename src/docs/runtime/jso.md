@@ -9,7 +9,8 @@ This section shows how to use JSO to interact with an existing JavaScript code.
 
 Note, that if you are familiar with GWT, you can find that JSO concepts are quite similar to approach taken by GWT.
 
-*The API, described above, only works for JavaScript backend and is not designed for WebAssembly.* 
+*The API, described above, only works for JavaScript and WebAssembly GC backends.
+It won't work with classic (aka MVP) WebAssembly, WASI and C backends.* 
 
 
 ## Maven dependencies
@@ -349,6 +350,9 @@ private native byte[] subarray(@JSByRef byte[] array);
 ```
 
 This can have unexpected consequences and non-obvious errors. Please, avoid this!
+
+*`@JSByRef` annotation is not supported by WebAssembly GC backend.
+This is not a limitation of TeaVM, but a limitation of the WebAssembly GC spec itself.*
 
 
 ## Defining top-level functions and properties
