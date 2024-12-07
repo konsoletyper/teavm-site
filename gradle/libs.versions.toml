@@ -1,6 +1,6 @@
 [versions]
 
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 freemarker = "2.3.32"
 commonmark = "0.20.0"
 jackson = "2.14.2"
