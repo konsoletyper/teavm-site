@@ -34,6 +34,8 @@ documents:
         synthesized: true
         path: release-notes
         children:
+          - title: Release 0.11.0
+            path: release-notes/0.11.0
           - title: Release 0.10.0
             path: release-notes/0.10.0
           - title: Release 0.9.2
