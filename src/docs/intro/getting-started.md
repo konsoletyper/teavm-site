@@ -17,6 +17,24 @@ mvn -DarchetypeCatalog=local \
 Now you can execute `mvn clean package` and get the generated `war` file.
 Deploy this `war` in Tomcat or another container, or simply unzip it and open the `index.html` page.
 
+Alternatively, you can run following command to generate WebAssembly GC project:
+
+```bash
+mvn -DarchetypeCatalog=local \
+  -DarchetypeGroupId=org.teavm \
+  -DarchetypeArtifactId=teavm-maven-webapp-wasm-gc \
+  -DarchetypeVersion=${teavm_version} archetype:generate
+```
+
+Note that browsers don't support loading `wasm` files from local file system, so the only option to 
+run WebAssembly project is to serve it via HTTP.
+There are several options to serve content via HTTP, for example:
+
+* using [Jetty Plugin](https://jetty.org/docs/jetty/12/programming-guide/maven-jetty/jetty-maven-plugin.html)
+* using IDEA (only Enterprise Edition)
+* using python (`python -m http.server 8080`)
+* and so on.
+
 You can continue learning by exploring the generated project, which has plenty of comments and should
 be self-explanatory.
 
@@ -41,14 +59,27 @@ dependencies {
     implementation teavm.libs.jsoApis
 }
 
-teavm.js {
-    addedToWebApp = true
-    mainClass = "example.MainClass"
-    
-    // this is also optional, default value is <project name>.js
-    targetFileName = "example.js"
+teavm {
+    all {
+        mainClass = "example.MainClass"
+    }
+    js {
+        addedToWebApp = true
+
+        // this is also optional, default value is <project name>.js
+        targetFileName = "example.js"
+    }
+    wasmGC {
+        addedToWebApp = true
+
+        // this is also optional, default value is <project name>.wasm
+        targetFileName = "example.wasm"
+    }
 }
 ```
+
+If you don't need either JS or WebAssembly GC, you can remove corresponding `addedToWebApp` setting, 
+or ever entire configuration section related to particular backend.
 
 where `MainClass` could do something simple like writing "Hello, world" string in the console.
 A bit more complex example of `MainClass` could be following:
@@ -83,9 +114,32 @@ Finally, you need to add to your webapp resources `index.html` page, which inclu
 </html>
 ```
 
+or if you need WebAssembly, HTML file like this:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TeaVM WebAssembly example</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <script type="text/javascript" charset="utf-8" src="wasm-gc/example.wasm-runtime.js"></script>
+    <script>
+      async function main() {
+          let teavm = await TeaVM.wasmGC.load("wasm-gc/example.wasm");
+          teavm.exports.main([]);
+      }
+    </script>
+  </head>
+  <body onload="main()"></body>
+</html>
+```
+
 now you can run build `gradle build` or, if you are using Gradle wrapper, `./gradlew build` or `gradlew.bat build`.
 Finally, take `.war` file from `build/libs` directory and deploy it to any compatible container or
 simply unzip and open `index.html`.
+
+Note that during development you can use [Gretty](https://plugins.gradle.org/plugin/org.gretty)
+plugin to serve you `.war` file via HTTP.
 
 
 ## Further learning
