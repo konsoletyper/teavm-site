@@ -1,13 +1,14 @@
-With TeaVM you can not only compile Java application to JavaScript, 
-but also create JavaScript libraries with Java.
+With TeaVM you can not only compile Java application to JavaScript or WebAssembly, 
+but also create JavaScript and WebAssembly libraries with Java.
 You are required to put additional annotations on your code 
 and make some extra setup in the build system.
 These topics are uncovered below.
 
-*Note that this section describes functionality available in [preview builds](/docs/intro/preview-builds.html)*.
-
 
 # Setting up module system
+
+*This section is only relevant for JS backend.
+Currently, WebAssembly can't compile to JS modules.*
 
 By default, TeaVM generates UMD wrapper, which is compatible both with AMD and CommonJS module systems,
 or puts Java entry points into global namespace, if none available.
