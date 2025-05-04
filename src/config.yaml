@@ -13,9 +13,9 @@ site:
     - category: gallery
       name: Gallery
       path: /gallery.html
-  teavmVersion: 0.11.0
+  teavmVersion: 0.12.0
   teavmDevVersion: 0.11.0-dev-1
-  teavmBranch: 0.11.x
+  teavmBranch: 0.12.x
 
 documents:
   - title: Introduction
