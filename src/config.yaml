@@ -102,5 +102,9 @@ gallery:
     source: https://github.com/konsoletyper/teavm/tree/master/samples/software3d
   - title: Commodore 64 emulator (JSIDPlay2)
     image: /img/examples/commodore64.png
-    path: https://haendel.ddns.net:8443/static/teavm/c64jukebox.vue?teavmFormat=JS
+    path: https://haendel.ddns.net:8443/static/teavm/c64jukebox.vue?teavmFormat=WASM_GC
     source: https://sourceforge.net/p/jsidplay2/code/HEAD/tree/
+  - title: Masamune (featuring libGDX)
+    image: /img/examples/masamune.png
+    path: https://quillraven.github.io/Masamune/
+    source: https://github.com/Quillraven/Masamune
