@@ -28,6 +28,7 @@ fun main(args: Array<out String>) {
   )
   processor.processPage("index.ftl", "index.html")
   processor.processPage("gallery.ftl", "gallery.html", config.gallery)
+  processor.processPage("playground.ftl", "playground.html", config.gallery)
   processor.processPage("404.ftl", "404.html", config.gallery)
 
   val docs = DocumentGenerator(config.site, inputDir, processor, config.documents).apply { generate() }

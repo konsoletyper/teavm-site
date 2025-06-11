@@ -13,6 +13,9 @@ site:
     - category: gallery
       name: Gallery
       path: /gallery.html
+    - category: playground
+      name: Playground
+      path: /playground.html
   teavmVersion: 0.12.1
   teavmDevVersion: 0.11.0-dev-1
   teavmBranch: 0.12.x
