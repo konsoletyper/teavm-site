@@ -1,0 +1,10 @@
+{
+  "simple": {
+    "title": "Simple",
+    "items": {
+      "Hello": "Hello",
+      "WebHello": "Hello (HTML version)",
+      "Streams": "Stream API"
+    }
+  }
+}
