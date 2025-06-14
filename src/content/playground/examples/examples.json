@@ -6,5 +6,11 @@
       "WebHello": "Hello (HTML version)",
       "Streams": "Stream API"
     }
+  },
+  "advanced": {
+    "title": "Advanced",
+    "items": {
+      "Cube3D": "3D cube"
+    }
   }
 }
