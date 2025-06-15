@@ -37,7 +37,7 @@ body {
   margin: 0;
   padding-top: 65px;
   min-height: 100vh;
-  padding-bottom: 36px;
+  padding-bottom: 46px;
   box-sizing: border-box;
 }
 
@@ -524,16 +524,296 @@ pre code {
   text-align: center;
 }
 
-.playground-container {
-  display: flex;
+.playground {
   width: 100%;
+  flex-grow: 1;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
-  flex-grow: 1;
-}
-.playground {
-  flex-grow: 1;
   border: none;
   margin: 0;
   padding: 0;
+}
+
+.playground button {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 10pt;
+  font-weight: bold;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #4582EC;
+  color: #fff;
+  border: 1px solid #4582EC;
+  text-decoration: none;
+}
+.playground button > span {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25em;
+}
+.playground button > span::before {
+  font-family: FontAwesome;
+}
+
+.playground button:hover {
+  background-color: #1863e6;
+  border-color: #175fdd;
+}
+.playground button:active {
+  background-color: #1863e6;
+  border-color: #175fdd;
+}
+
+.red-wave {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: red;
+}
+
+.yellow-wave {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #b8a600;
+}
+
+.gutter-error {
+  color: red;
+}
+.gutter-warning {
+  color: #b8a600;
+}
+
+.diagnostics {
+  padding-right: 5px;
+}
+
+.playground-toolbar {
+  flex-grow: 0;
+  height: 54px;
+  padding-top: 5px;
+  padding-left: 6px;
+  border-bottom: #E8E8E8 solid 1px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.playground-content {
+  flex-grow: 1;
+  position: relative;
+}
+
+.playground-editor-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  padding-right: 5px;
+  border-right: #E8E8E8 solid 1px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.playground-out-container {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-right: 5px;
+  box-sizing: border-box;
+}
+
+.CodeMirror {
+  display: flex;
+  flex-grow: 1;
+}
+
+.playground-result-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 50%;
+  right: 0;
+  border-bottom: #E8E8E8 solid 1px;
+  box-sizing: border-box;
+}
+
+.playground-result {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.playground-stdout-container {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  bottom: 0;
+  right: 0;
+}
+
+.playground-stdout {
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-family: monospace;
+  white-space: pre-wrap;
+  padding: 3px;
+  overflow: auto;
+}
+
+.playground-stdout .compile-time {
+  color: rgb(192,0,0);
+}
+
+.playground-stdout .error {
+  color: rgb(192,0,0);
+}
+
+.playground-panel-label {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background-color: #E8E8E8;
+  padding: 2px 8px 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.playground-toolbar-right {
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  top: 0;
+  line-height: 54px;
+}
+
+.playground-github-link {
+  margin-top: 6px;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-size: contain;
+}
+
+.playground-github-link:hover {
+}
+
+.playground-github-link::before {
+  content: "\f09b";
+  font-size: 32px;
+}
+
+.playground-examples-container {
+  max-height: 400px;
+}
+
+.loading {
+  background:rgba(0,0,0,0.2);
+  font-weight: bold;
+  font-size: 200%;
+  padding: 2em;
+  color: white;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+}
+
+.playground-examples-content h3 {
+  border-bottom: 1px dotted #dddddd;
+  margin-top: 0.5em;
+  margin-bottom: 0.3em;
+  padding-bottom: 0.1em;
+}
+
+.playground-examples-content .example-item {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.playground-examples-content .example-item span {
+  color: blue;
+  cursor: pointer;
+  border-bottom: 1px dashed blue;
+}
+
+.playground-examples-content .example-item span:hover {
+  color: blue;
+  cursor: pointer;
+  border-bottom-color: rgb(80, 80, 255);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #0000001F;
+  backdrop-filter: blur(2.5px);
+}
+
+.modal.modal-open {
+  display: flex;
+}
+
+.modal-dialog {
+  font-size: 14pt;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  min-width: 20em;
+  max-width: 40em;
+  max-height: 50em;
+  overflow: auto;
+  border-radius: 0.5em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dddddd;
+  background-color: white;
+  padding: 0.5em;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  border-bottom: #dddddd solid 1px;
+}
+.modal-header > button.close {
+  background: none;
+  border: none;
+  color: rgb(150,150,150);
+}
+.modal-header > button.close:hover {
+  color: rgb(180,180,180);
+}
+.modal-title {
+  padding: 0;
+  margin: 0;
+}
+
+.run-action::before {
+  display: inline-block;
+  content: "\f04b";
+  width: 1.5em;
+  height: 1.5em;
+}
+.examples-action::before {
+  display: inline-block;
+  content: "\f02d";
+  width: 1.5em;
+  height: 1.5em;
 }
