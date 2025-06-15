@@ -1,5 +1,3 @@
-package org.teavm.samples.hello;
-
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
