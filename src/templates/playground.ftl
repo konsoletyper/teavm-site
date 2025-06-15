@@ -49,7 +49,7 @@
       </div>
       <div class="playground-out-container">
         <div class="playground-result-container" id="result-container">
-          <iframe id="result" class="playground-result"></iframe>
+          <iframe id="result" class="result"></iframe>
           <span class="playground-panel-label">result</span>
         </div>
         <div class="playground-stdout-container">
