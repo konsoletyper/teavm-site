@@ -10,7 +10,8 @@
   "advanced": {
     "title": "Advanced",
     "items": {
-      "Cube3D": "3D cube"
+      "Cube3D": "3D cube",
+      "Minesweeper": "Minesweeper"
     }
   }
 }
