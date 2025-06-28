@@ -354,6 +354,37 @@ This can have unexpected consequences and non-obvious errors. Please, avoid this
 *`@JSByRef` annotation is not supported by WebAssembly GC backend.
 This is not a limitation of TeaVM, but a limitation of the WebAssembly GC spec itself.*
 
+To write a portable code that compiles both to JS and WebAssembly GC without rewriting, 
+you can set `optional` argument of `@JSByRef` to `true`.
+
+
+## Passing NIO buffers
+
+You can pass NIO buffer directly to JS method, for example:
+
+```java
+void texImage2D(int target, int level, int internalformat,
+        int width, int height, int border, int format,
+        int type, Buffer pixels);
+```
+
+TeaVM will do its best to determine target JS class (`ArrayBuffer`, `Int8Array`, etc.) by Java type signature.
+You can override it by specifying `@JSBuffer` annotation, like this:
+
+```java
+void uniform1uiv(WebGLUniformLocation location, 
+        @JSBuffer(JSBufferType.UINT32) Buffer data);
+```
+
+Note that this will work in WebAssembly GC only with direct buffers. 
+Passing array-backed buffers will cause runtime error.
+
+*As of now, passing direct NIO buffers to JS methods is the fastest way to interact with JS APIs from
+WebAssembly GC. This is a limitation of WebAssembly spec.* 
+
+Returning NIO buffers from JS method is not supported. If you want to pass a large amount of data
+from JS to WebAssembly, you should pass a direct NIO buffer to JS method and expect this method to fill the buffer. 
+
 
 ## Defining top-level functions and properties
 
