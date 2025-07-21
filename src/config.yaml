@@ -16,7 +16,7 @@ site:
     - category: playground
       name: Playground
       path: /playground.html
-  teavmVersion: 0.12.2
+  teavmVersion: 0.12.3
   teavmDevVersion: 0.11.0-dev-1
   teavmBranch: 0.12.x
 
