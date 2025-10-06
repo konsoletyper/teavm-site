@@ -15,6 +15,7 @@ class Site {
   var teavmVersion = "0.1.0-SNAPSHOT"
   var teavmDevVersion = "0.1.0-SNAPSHOT"
   var teavmBranch = "snapshot"
+  var playgroundVersion = ""
 }
 
 class Page {

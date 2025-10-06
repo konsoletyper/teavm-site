@@ -1,26 +1,26 @@
 <#import "page.ftl" as page>
 <@page.page title="Playground" category="playground" site=site>
-  <script type="text/javascript" src="/playground/codemirror.min.js"></script>
-  <script type="text/javascript" src="/playground/codemirror-clike.min.js"></script>
+  <script type="text/javascript" src="/playground/${site.playgroundVersion}/codemirror.min.js"></script>
+  <script type="text/javascript" src="/playground/${site.playgroundVersion}/codemirror-clike.min.js"></script>
   <script type="module">
-      import { load } from "/playground/wasm-gc/ui.wasm-runtime.js";
+      import { load } from "/playground/${site.playgroundVersion}/wasm-gc/ui.wasm-runtime.js";
 
       document.body.onload = async () => {
-          let teavm = await load("/playground/wasm-gc/ui.wasm", {
+          let teavm = await load("/playground/${site.playgroundVersion}/wasm-gc/ui.wasm", {
               stackDeobfuscator: {
                   enabled: true
               }
           });
           teavm.exports.setupUI({
-              workerLocation: "/playground/worker.js",
-              stdlibLocation: "/playground/compile-classlib-teavm.bin",
-              runtimeStdlibLocation: "/playground/runtime-classlib-teavm.bin",
-              examplesLocation: "/playground/examples/",
-              frameLocation: "/playground/run-frame.html"
+              workerLocation: "/playground/${site.playgroundVersion}/worker.js",
+              stdlibLocation: "/playground/${site.playgroundVersion}/compile-classlib-teavm.bin",
+              runtimeStdlibLocation: "/playground/${site.playgroundVersion}/runtime-classlib-teavm.bin",
+              examplesLocation: "/playground/${site.playgroundVersion}/examples/",
+              frameLocation: "/playground/${site.playgroundVersion}/run-frame.html"
           });
       }
       let link = document.createElement("link");
-      link.setAttribute("href", "/playground/codemirror.min.css")
+      link.setAttribute("href", "/playground/${site.playgroundVersion}/codemirror.min.css")
       link.setAttribute("rel", "stylesheet")
       link.setAttribute("type", "text/css")
       document.head.appendChild(link);

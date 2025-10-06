@@ -3,7 +3,6 @@ package org.teavm.site
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import freemarker.core.HTMLOutputFormat
-import freemarker.core.OutputFormat
 import freemarker.template.Configuration
 import freemarker.template.TemplateExceptionHandler
 import org.commonmark.node.AbstractVisitor
@@ -36,8 +35,17 @@ fun main(args: Array<out String>) {
   val contentDir = File(inputDir, "content")
   for (file in contentDir.walkTopDown()) {
     if (file.isFile) {
-      val outputFile = File(outputDir, file.toRelativeString(contentDir))
-      file.copyTo(outputFile, overwrite = true)
+      val relPath = file.toRelativeString(contentDir)
+      if (relPath.startsWith("playground/")) {
+        val outputFile = File(outputDir, "playground/" + config.site.playgroundVersion + "/" +
+            relPath.removePrefix("playground/"))
+        val text = file.readText()
+        outputFile.parentFile.mkdirs()
+        outputFile.writeText(text.replace("{{playgroundVersion}}", config.site.playgroundVersion))
+      } else {
+        val outputFile = File(outputDir, relPath)
+        file.copyTo(outputFile, overwrite = true)
+      }
     }
   }
   for (relPath in docs.filesToCopy) {

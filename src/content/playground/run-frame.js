@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { load } from '/playground/compiler.wasm-runtime.js'
+import { load } from '/playground/{{playgroundVersion}}/compiler.wasm-runtime.js'
 
 window.addEventListener("message", async function(event) {
     let request = event.data;
@@ -23,7 +23,7 @@ window.addEventListener("message", async function(event) {
          module = await load(request.code, {
             stackDeobfuscator: {
                 enabled: true,
-                path: "/playground/compiler.wasm-deobfuscator.wasm"
+                path: "/playground/{{playgroundVersion}}/compiler.wasm-deobfuscator.wasm"
             },
             installImports(o) {
                 o.teavmConsole.putcharStdout = putStdout;
