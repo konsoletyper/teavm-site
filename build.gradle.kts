@@ -1,7 +1,7 @@
 plugins {
   base
   war
-  id("org.gretty") version "4.0.3"
+  id("org.gretty") version "4.1.10"
 }
 
 configurations {
@@ -14,7 +14,7 @@ dependencies {
 
 val buildSite = tasks.register<JavaExec>("buildSite") {
   val inputDir = File(projectDir, "src")
-  val outputDir = File(buildDir, "site")
+  val outputDir = layout.buildDirectory.dir("site").get().asFile
   inputs.dir(inputDir)
   outputs.dir(outputDir)
   classpath += files(provider { configurations["builder"] })
@@ -28,8 +28,8 @@ tasks.assemble {
 
 gretty {
   contextPath = "/"
-  fastReload = false
-  extraResourceBase(File(buildDir, "site"))
+  setFastReload(false)
+  extraResourceBase(layout.buildDirectory.dir("site"))
 }
 
 tasks.configureEach {
