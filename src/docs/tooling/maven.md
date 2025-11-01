@@ -4,20 +4,20 @@ Here is an example of how to use it:
 ```xml
 <project>
   ...
+  <dependencies>
+    <!-- This dependency is required by TeaVM to emulate subset of Java class library -->
+    <dependency>
+      <groupId>org.teavm</groupId>
+      <artifactId>teavm-classlib</artifactId>
+      <version>${teavm_version}</version>
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
         <groupId>org.teavm</groupId>
         <artifactId>teavm-maven-plugin</artifactId>
         <version>${teavm_version}</version>
-        <dependencies>
-          <!-- This dependency is required by TeaVM to emulate subset of Java class library -->
-          <dependency>
-            <groupId>org.teavm</groupId>
-            <artifactId>teavm-classlib</artifactId>
-            <version>${teavm_version}</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
             <goals>
