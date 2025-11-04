@@ -114,3 +114,11 @@ gallery:
     image: /img/examples/masamune.png
     path: https://quillraven.github.io/Masamune/
     source: https://github.com/Quillraven/Masamune
+  - title: WebFX example (JavaFX port)
+    image: /img/examples/webfx.png
+    path: https://cube-wasm.webfx.dev
+    source: https://github.com/webfx-demos/webfx-demo-cube
+  - title: Slicer (Java decompiler)
+    image: /img/examples/slicer.png
+    path: https://slicer.run/
+    source: https://github.com/run-slicer/slicer
