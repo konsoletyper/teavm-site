@@ -19,7 +19,7 @@ site:
   teavmVersion: 0.13.0
   teavmDevVersion: 0.11.0-dev-1
   teavmBranch: 0.13.x
-  playgroundVersion: 2
+  playgroundVersion: 3
 
 documents:
   - title: Introduction
