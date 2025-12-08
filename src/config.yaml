@@ -94,14 +94,13 @@ documents:
         path: contributing/testing
 
 gallery:
+  - title: Okyline Studio
+    image: /img/examples/okyline.png
+    path: https://community.studio.okyline.io/
   - title: JBox2D scene compiled with GWT and TeaVM
     image: /img/examples/jbox2d.png
     path: /gallery/jbox2d/index.html
     source: https://github.com/konsoletyper/teavm/tree/master/samples/benchmark
-  - title: Calculator in Scala
-    image: /img/examples/scala-calculator.png
-    path: /gallery/scala-calculator/index.html
-    source: https://github.com/konsoletyper/teavm/tree/master/samples/scala
   - title: Software 3D renderer in Kotlin
     image: /img/examples/software3d.png
     path: /gallery/software3d/index.html

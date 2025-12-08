@@ -25,7 +25,7 @@
         </ul>
         <ul class="site-navigation-list site-navigation-aux">
           <li><a href="mailto:${site.email}" title="Contact us" class="with-icon contact-us"></a></li>
-          <li><a href="${site.forum}" title="Google Groups" class="with-icon forum"></a></li>
+          <li><a href="${site.forum}" title="Discord" class="with-icon forum"></a></li>
           <li><a href="${site.issues}" title="Issue tracker" class="with-icon issue-tracker"></a></li>
           <li><a href="${site.vcs}" title="Source code" class="with-icon source-code"></a></li>
           <li><a href="${site.donate}" title="Donate" class="with-icon donate"></a></li>

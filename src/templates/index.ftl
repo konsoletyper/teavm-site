@@ -52,13 +52,13 @@
         <h2>Sponsors</h2>
         <ul>
           <li>
-            <a href="http://reportmill.com/">
-              <img src="sponsor-badges/reportmill.png" alt="ReportMill Software">
+            <a href="https://www.jdeploy.com/">
+              <img src="sponsor-badges/jdeploy.png" alt="jDeploy">
             </a>
           </li>
           <li>
-            <a href="https://www.jdeploy.com/">
-              <img src="sponsor-badges/jdeploy.png" alt="jDeploy">
+            <a href="https://akwatype.io/community">
+              <img src="sponsor-badges/Oky{ine.png" alt="Oky{ine" height="35">
             </a>
           </li>
         </ul>
