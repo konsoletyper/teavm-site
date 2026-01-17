@@ -69,20 +69,29 @@ documents:
       - title: Tuning Java class library
         path: runtime/java-classes
 
+  - title: C backend
+    path: c-backend
+    synthesized: true
+    children:
+      - title: Getting started
+        path: c-backend/getting-started
+      - title: Calling native code
+        path: c-backend/native
+
   - title: Tooling
     path: tooling
     synthesized: true
     children:
-        - title: Using Maven
-          path: tooling/maven
-        - title: Using Gradle
-          path: tooling/gradle
-        - title: Using IDEA
-          path: tooling/idea
-        - title: Debugging
-          path: tooling/debugging
-        - title: Testing
-          path: tooling/testing
+      - title: Using Maven
+        path: tooling/maven
+      - title: Using Gradle
+        path: tooling/gradle
+      - title: Using IDEA
+        path: tooling/idea
+      - title: Debugging
+        path: tooling/debugging
+      - title: Testing
+        path: tooling/testing
 
   - title: Contributing
     path: contributing
