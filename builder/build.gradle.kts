@@ -8,6 +8,7 @@ plugins {
 dependencies {
   implementation(libs.freemarker)
   implementation(libs.commonmark)
+  implementation(libs.commonmark.tables)
   implementation(libs.jackson.yaml)
 }
 

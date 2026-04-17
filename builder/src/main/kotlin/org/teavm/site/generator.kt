@@ -5,6 +5,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import freemarker.core.HTMLOutputFormat
 import freemarker.template.Configuration
 import freemarker.template.TemplateExceptionHandler
+import org.commonmark.Extension
+import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.Image
 import org.commonmark.parser.Parser
@@ -14,6 +16,7 @@ import java.io.FileWriter
 import java.io.StringWriter
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
+
 
 fun main(args: Array<out String>) {
   val inputDir = File(args[0])
@@ -98,10 +101,12 @@ private class DocumentGenerator(
 
   private fun processContent(document: Document): DocumentRenderModel {
     val path = document.path
+
+    val extensions: List<Extension> = listOf(TablesExtension.create())
     val text = if (document.synthesized) {
       processor.processPageInMemory("synthesized-section.ftl", document)
     } else {
-      val parser = Parser.builder().build()
+      val parser = Parser.builder().extensions(extensions).build()
       val inputText = File(inputDir, "docs/$path.md").readText()
       val markdownDocument = parser.parse(processProperties(path, inputText))
       val pathPrefix = path.substring(0, path.lastIndexOf('/') + 1)
@@ -117,7 +122,7 @@ private class DocumentGenerator(
           }
         }
       })
-      val renderer = HtmlRenderer.builder().build()
+      val renderer = HtmlRenderer.builder().extensions(extensions).build()
       renderer.render(markdownDocument)
     }
     return DocumentRenderModel(

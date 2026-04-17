@@ -2,7 +2,7 @@
 
 kotlin = "2.1.0"
 freemarker = "2.3.32"
-commonmark = "0.20.0"
+commonmark = "0.28.0"
 jackson = "2.14.2"
 
 
@@ -10,6 +10,7 @@ jackson = "2.14.2"
 
 freemarker = { module = "org.freemarker:freemarker", version.ref = "freemarker" }
 commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
+commonmark-tables = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "commonmark" }
 jackson-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 
 

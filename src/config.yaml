@@ -69,6 +69,13 @@ documents:
       - title: Tuning Java class library
         path: runtime/java-classes
 
+  - title: Wasm GC backend
+    path: wasm-gc-backend
+    synthesized: true
+    children:
+      - title: Loader API
+        path: wasm-gc-backend/loader
+
   - title: C backend
     path: c-backend
     synthesized: true
