@@ -2,15 +2,11 @@ TeaVM Metaprogramming is a compile-time code generation API that lets you write 
 
 Tests are available in `:tests` module in package `org.teavm.metaprogramming.test`.
 
----
-
 ## Core concepts
 
 The metaprogramming API lets a *meta-method* (compile-time Java code) generate the body of a *target method* (runtime Java code). The meta-method runs at TeaVM compilation time, inspects its arguments as compile-time descriptors, and uses the `Metaprogramming` API to emit the code that will actually execute at runtime.
 
 All methods on `Metaprogramming` throw `UnsupportedOperationException` when called outside a TeaVM compile-time environment; the class exists only to give you a typed API.
-
----
 
 ## The two worlds
 
@@ -25,7 +21,6 @@ There are two separate execution contexts, and it is essential to keep them apar
 
 The meta-method lives entirely in the compile-time world. Lambdas you pass to `emit()`, `lazy()`, and `exit()` are *snippets of runtime code*, not closures executed at compile time.
 
----
 
 ## @Meta — declaring a meta-method
 
@@ -61,7 +56,6 @@ static void callDebug(ReflectClass<?> cls, Value<Object> obj) { … }
 static void callDebug(ReflectClass<?> cls, Value<Object> obj, Value<String> a, Value<Integer> b) { … }
 ```
 
----
 
 ## Value&lt;T&gt; — the bridge between worlds
 
@@ -97,7 +91,6 @@ static void captureArray(Value<Integer> a, Value<String> b) {
 }
 ```
 
----
 
 ## emit() — producing runtime code
 
@@ -140,8 +133,6 @@ You can pass an existing `Value<T>` directly to `emit()` as a `Computation<T>` (
 Value<String> v = emit(() -> "hello");
 Value<String> v2 = emit(v);  // emits code that reads the same runtime variable
 ```
-
----
 
 ## lazy() — conditional code emission
 
@@ -198,7 +189,6 @@ static <T> Value<T> lazyFragment(LazyComputation<T> computation)
 
 A lower-level variant where the lambda itself returns a `Value<T>` (i.e. it calls `emit()` / `lazy()` internally). Prefer `lazy()` in most cases.
 
----
 
 ## exit() — returning values
 
@@ -227,7 +217,6 @@ static void callDebug(ReflectClass<?> cls, Value<Object> obj) {
 
 After `exit()` returns to the meta-method, control flow in the meta-method continues normally, but further `emit()` calls after `exit()` extend **unreachable** branches in the generated IR; prefer not to emit anything meaningful after `exit()`.
 
----
 
 ## unsupportedCase()
 
@@ -246,8 +235,6 @@ static void classNameLength(ReflectClass<?> cls, Value<Integer> add) {
     // … handle the supported cases
 }
 ```
-
----
 
 ## proxy() — generating anonymous implementations
 
@@ -305,7 +292,6 @@ Value<T> proxy = proxy(proxyType, (instance, method, args) -> {
 
 All `args` are `Value<Object>`. When the real parameter type is a primitive, the value is auto-boxed before being handed to the handler. The handler is responsible for unboxing if needed (e.g. by calling a typed method on the boxed value inside the emitter lambda).
 
----
 
 ## MetaprogrammingProvider — annotation-driven generators
 
@@ -382,7 +368,6 @@ Calling `describe(1, "hello")` at runtime produces `"int: 1\njava.lang.String: h
 
 The provider approach is suitable when the same generation strategy applies across many methods, or when you cannot modify the class that declares the target methods.
 
----
 
 ## @CompileTime — compile-time-only classes
 
@@ -433,8 +418,6 @@ static void compileTimeClass(Value<Boolean> ignored) {
     exit(() -> result.get());
 }
 ```
-
----
 
 ## Reflection API
 
@@ -515,8 +498,6 @@ if (ann != null) {
 }
 ```
 
----
-
 ## Diagnostics
 
 ```java
@@ -547,8 +528,6 @@ Metaprogramming.getDiagnostics().error(
 );
 ```
 
----
-
 ## Source locations
 
 ```java
@@ -560,8 +539,6 @@ static SourceLocation getLocation()
 By default, emitted instructions carry no debug source location. Use `location()` to associate subsequent `emit()` / `lazy()` / `exit()` calls with a specific source position (for source-maps and error messages). `defaultLocation()` removes the override.
 
 `getLocation()` returns the current forced location (or the location of the original call-site if no override is set), useful for passing to `Diagnostics`.
-
----
 
 ## Utilities
 
