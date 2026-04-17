@@ -1,7 +1,7 @@
 plugins {
   base
   war
-  id("org.gretty") version "4.1.10"
+  id("org.gretty") version "5.0.2"
 }
 
 configurations {
