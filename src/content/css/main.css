@@ -487,7 +487,7 @@ pre {
   display: block;
   padding: 10.5px;
   margin: 0 0 11px;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 1.428571429;
   word-break: break-all;
   word-wrap: break-word;
@@ -816,4 +816,17 @@ pre code {
   content: "\f02d";
   width: 1.5em;
   height: 1.5em;
+}
+
+table {
+  border-collapse: collapse;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #555;
+}
+
+td, th {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #555;
 }
