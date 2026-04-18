@@ -75,6 +75,8 @@ documents:
     children:
       - title: Loader API
         path: wasm-gc-backend/loader
+      - title: Emscripten integration
+        path: wasm-gc-backend/emscripten
 
   - title: C backend
     path: c-backend
