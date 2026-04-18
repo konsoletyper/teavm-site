@@ -1,6 +1,5 @@
 TeaVM Metaprogramming is a compile-time code generation API that lets you write Java code that runs *during* TeaVM compilation to generate the actual runtime code. Think of it as a type-safe, Java-based alternative to annotation processors or bytecode instrumentation — but tightly integrated into the TeaVM compilation pipeline.
 
-Tests are available in `:tests` module in package `org.teavm.metaprogramming.test`.
 
 ## Core concepts
 
