@@ -222,11 +222,21 @@ console.log(color instanceof Point); // prints 'false'
 Note that if you want to specify exported class name explicitly, you can use `@JSClass` annotation:
 
 ```java
-// This class will be seen as 'Bar' in JS 
-@JSExport("Bar")
+@JSExportClasses(Foo.class)
+public class MyModule {
+}
+
+// This class will be seen as 'Bar' in JS
+@JSClass(name = "Bar")
 public class Foo {
+    @JSExport
+    public Foo() {}
 }
 ```
+
+Or if the class is already referenced from exported method signatures, `@JSExportClasses` is not
+needed — TeaVM will export it automatically.  The `@JSClass(name = "Bar")` annotation on `Foo`
+controls the name under which it appears in the generated module.
 
 
 # Taking non-primitive parameters
@@ -292,9 +302,171 @@ The behaviour is following: as soon as a class with `@JSExportClasses` annotatio
 for some reason, all classes enumerated in the annotation will also be exported. For example:
 
 ```java
-@JSExportedClasses({ Point.class })
+@JSExportClasses({ Point.class })
 public class MyModule {
     // This class is empty, it does not export any methods to JavaScript
     // However, Point class is exported
 }
+```
+
+
+# Exporting constructors
+
+`@JSExport` can be placed on individual constructors to control which constructors are visible on
+the JavaScript side.  If a class has any constructor annotated with `@JSExport`, only those
+constructors are exported; non-annotated constructors remain private to Java:
+
+```java
+public class Point {
+    private int x;
+    private int y;
+
+    @JSExport
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // This constructor is only used from Java, not exported to JS
+    Point(String encoded) {
+        // ...
+    }
+}
+```
+
+On the JavaScript side, only the two-argument constructor is accessible via `new Point(x, y)`.
+
+
+# Exporting instance members
+
+`@JSExport` can be placed on instance methods and properties of a plain Java class, not just on
+static methods.  The class itself does not need any class-level annotation; TeaVM detects the
+exported members automatically when the class appears in an exported method's signature.
+
+```java
+public class Counter {
+    private int value;
+
+    @JSExport
+    public Counter(int initial) {
+        this.value = initial;
+    }
+
+    @JSExport
+    @JSProperty
+    public int getValue() {
+        return value;
+    }
+
+    @JSExport
+    public void increment() {
+        value++;
+    }
+
+    @JSExport
+    public static int baz() {
+        return 99;
+    }
+
+    @JSExport
+    @JSProperty
+    public static String staticProp() {
+        return "I'm static";
+    }
+}
+
+public class MyModule {
+    @JSExport
+    public static Counter createCounter(int initial) {
+        return new Counter(initial);
+    }
+}
+```
+
+From JavaScript:
+
+```js
+import { createCounter } from './myModule.js';
+const c = createCounter(5);
+console.log(c.value);   // 5
+c.increment();
+console.log(c.value);   // 6
+console.log(Counter.baz());       // 99
+console.log(Counter.staticProp);  // "I'm static"
+```
+
+
+# Exporting class hierarchies
+
+When exported classes form an inheritance hierarchy, TeaVM preserves the prototype chain so that
+`instanceof` and inherited members work correctly on the JS side:
+
+```java
+@JSExportClasses({
+    BaseClass.class,
+    Subclass.class
+})
+public class MyModule {}
+
+public class BaseClass {
+    @JSExport
+    public BaseClass() {}
+
+    @JSExport
+    public String foo() {
+        return "Base.foo";
+    }
+}
+
+public class Subclass extends BaseClass {
+    @JSExport
+    public Subclass() {}
+
+    @Override
+    public String foo() {
+        return "Sub.foo";
+    }
+
+    @JSExport
+    public String bar() {
+        return "Sub.bar";
+    }
+}
+```
+
+From JavaScript:
+
+```js
+import { BaseClass, Subclass } from './myModule.js';
+const base = new BaseClass();
+const sub  = new Subclass();
+
+console.log(base.foo());          // "Base.foo"
+console.log(sub.foo());           // "Sub.foo"
+console.log(sub.bar());           // "Sub.bar"
+console.log(sub instanceof BaseClass);  // true
+```
+
+Only methods annotated with `@JSExport` (or inherited from an exported superclass) are visible to
+JavaScript; un-annotated overrides are still called polymorphically from the Java side.
+
+
+# Varargs in exported methods
+
+Exported methods may use Java varargs.  TeaVM translates them to JavaScript rest parameters, so
+callers can pass any number of arguments:
+
+```java
+public class MyModule {
+    @JSExport
+    public static String greet(String prefix, String... names) {
+        return prefix + ": " + String.join(", ", names);
+    }
+}
+```
+
+```js
+import { greet } from './myModule.js';
+console.log(greet("Hello", "Alice", "Bob", "Carol"));
+// "Hello: Alice, Bob, Carol"
 ```

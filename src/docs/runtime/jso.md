@@ -158,6 +158,32 @@ public interface HTMLElement extends Element {
 }
 ```
 
+## Renaming methods
+
+By default, an abstract or native method of an overlay type maps to a JavaScript method with the same name.
+To use a different JavaScript name, annotate the method with
+[@JSMethod](/javadoc/${teavm_branch}/jso/core/org/teavm/jso/JSMethod.html) and supply the desired name:
+
+```java
+public interface AbstractWrapper extends JSObject {
+    // calls JS method 'renamedJSMethod' instead of 'renamedMethod'
+    @JSMethod("renamedJSMethod")
+    int renamedMethod(int num);
+}
+```
+
+`@JSMethod` is also implicitly applied to any abstract or native method that carries no other JSO annotation,
+so the following two declarations are equivalent:
+
+```java
+// implicit @JSMethod:
+int foo(int n);
+
+// explicit @JSMethod:
+@JSMethod
+int foo(int n);
+```
+
 ## Mapping constructors
 
 To map a JS constructor into Java, just declare non-abstract class, annotate it with `@JSClass` and
@@ -172,6 +198,60 @@ public class Int8Array extends ArrayBufferView {
   public Int8Array(ArrayBuffer buffer) {
   }
   // etc
+}
+```
+
+By default, the JavaScript class name is taken from the simple Java class name.
+To map to a JavaScript class with a different name, pass it explicitly:
+
+```java
+@JSClass("Array")
+public class JSArray<T extends JSObject> implements JSObject {
+    // ...
+}
+```
+
+or equivalently, using the named attribute:
+
+```java
+@JSClass(name = "Array")
+public class JSArray<T extends JSObject> implements JSObject {
+    // ...
+}
+```
+
+
+## Public fields in `@JSClass` types
+
+`@JSClass` types may declare public instance and static fields that map directly to JavaScript object
+properties. The field type follows the same conversion rules as method parameters.
+
+```java
+@JSClass
+public class Rect implements JSObject {
+    public int x;
+    public int y;
+    public int width;
+    public int height;
+
+    public Rect(int x, int y, int width, int height) {}
+}
+```
+
+On the Java side, field reads and writes translate directly to the corresponding JS property accesses.
+
+Static fields map to static properties of the JS class:
+
+```java
+@JSClass("ClassWithConstructor")
+public class MyClass implements JSObject {
+    // static property on the class object itself
+    public static String staticProperty;
+
+    // top-level (global) variable
+    @JSProperty
+    @JSTopLevel
+    public static String topLevelProperty;
 }
 ```
 
@@ -306,7 +386,8 @@ Often, JavaScript APIs expect you to pass a callback function.
 This case is similar to passing as JavaScript objects, however you need to tell TeaVM to pass your
 Java classes as JavaScript functions.
 To do this, simply add the [@JSFunctor](/javadoc/${teavm_branch}/jso/core/org/teavm/jso/JSFunctor.html) annotation.
-Functor interfaces must contain exactly one method.
+Functor interfaces must contain exactly one abstract method.
+Default and static methods are allowed and are not treated as the functor method.
 
 For example,
 
@@ -324,6 +405,21 @@ static void doWork() {
     setTimeout(() -> doc.getBody().appendChild(doc.createTextNode("-")), 1000);
 }
 ```
+
+Functor methods may use varargs, which are passed as individual JavaScript arguments:
+
+```java
+@JSFunctor
+interface FunctorWithVarargs extends JSObject {
+    String accept(int first, String... remaining);
+}
+```
+
+When a functor is passed to JavaScript more than once, TeaVM guarantees the same JS function object is
+reused, preserving referential identity.
+
+A `null` functor is passed as `null` to JavaScript, and a `null` returned from JavaScript is converted
+back to `null` on the Java side.
 
 
 ## Passing arrays without copying
@@ -405,6 +501,39 @@ public class Window {
 }
 ```
 
+`@JSTopLevel` can also be placed on an entire class, making every static member of that class a
+top-level declaration. This is useful when grouping related top-level declarations together:
+
+```java
+@JSClass
+@JSTopLevel
+public class TopLevelDeclarations implements JSObject {
+    private TopLevelDeclarations() {}
+
+    public static native String topLevelFunction();
+
+    @JSProperty
+    public static native String getTopLevelProperty();
+
+    @JSProperty
+    public static native void setTopLevelProperty(String value);
+}
+```
+
+When `@JSTopLevel` is on the class, individual methods do not need `@JSTopLevel` themselves.
+
+`@JSTopLevel` can also be applied to static fields:
+
+```java
+@JSClass
+public class MyClass implements JSObject {
+    // maps to the global variable 'globalCounter'
+    @JSTopLevel
+    public static int globalCounter;
+}
+```
+
+
 ## Importing declarations from module
 
 You can import classes, functions and properties from external modules.
@@ -432,13 +561,42 @@ public class ImportedDeclarations implements JSObject {
 }
 ```
 
+`@JSModule` can also be placed on methods inside a `@JSClass` type.
+This means that any top-level `static` declarations in this class will be imported from the module.
+In the example below, `topLevelFunction` is imported from the module even though the class
+itself does not carry `@JSModule`:
+
+```java
+@JSClass(name = "ClassWithConstructor")
+@JSModule("./testModule.js")
+public class ClassWithConstructorInModule implements JSObject {
+    public ClassWithConstructorInModule(int foo) {}
+    public ClassWithConstructorInModule() {}
+
+    @JSProperty
+    public native int getFoo();
+
+    public native String bar();
+
+    @JSTopLevel
+    public static native String topLevelFunction();
+
+    @JSTopLevel
+    @JSProperty
+    public static native String getTopLevelProperty();
+}
+```
+
 ## Conversion rules
 
 TeaVM automatically converts from and to JS following types:
 
-* `boolean`, `byte`, `short`, `int`, `float`, `double` which correspond to JavaScript numeric values.
+* `boolean`, `byte`, `short`, `char`, `int`, `float`, `double` which correspond to JavaScript
+  numeric values. Note that `char` is treated as its numeric (UTF-16) code point
+* `long` which corresponds to JavaScript `BigInt` object.
 * `java.lang.String` which corresponds to JavaScript `String` object.
-* arrays of objects and primitives listed above.
+* arrays of objects and primitives listed above. Note that arrays of primitives correspond to
+  JavaScript typed arrays, not regular arrays.
 
 TeaVM **does not** convert Java collections and primitive wrappers.
 Additionally, TeaVM only performs conversion when type is directly known from method's signature.
@@ -500,4 +658,82 @@ public abstract class SomeClass {
     @JSProperty
     public abstract String getBar();
 }
+```
+
+
+## Exception handling
+
+Exceptions cross the Java–JavaScript boundary in both directions.
+
+**Java exceptions propagating through JS code** — when a Java callback (functor or JSObject implementation)
+throws an exception and the call passes through `@JSBody` JavaScript code, the exception is wrapped in
+a native JS object and re-thrown. It will be caught by the nearest Java `catch` block as normal.
+
+**Native JS exceptions caught in Java** — when JavaScript code throws a native exception (for example,
+`new Error("boom")`) and it propagates out of a `@JSBody` method, TeaVM wraps it in a `RuntimeException`
+whose message has the form `(JavaScript) <toString of the JS value>`:
+
+```java
+@JSBody(script = "throw new Error('boom');")
+private static native void throwNativeException();
+
+try {
+    throwNativeException();
+} catch (RuntimeException e) {
+    // e.getMessage() == "(JavaScript) Error: boom"
+}
+```
+
+**Accessing the original JS exception object** — use `JSExceptions.getJSException(Throwable)` to
+retrieve the underlying JS object from a caught Java exception that originated in JavaScript:
+
+```java
+try {
+    throwNativeException();
+} catch (RuntimeException e) {
+    JSObject jsEx = JSExceptions.getJSException(e);
+    // jsEx is the original JS Error object
+}
+```
+
+**Accessing the original Java exception** — when a Java exception propagates through JS and is caught
+inside `@JSBody` JavaScript code, use `JSExceptions.getJavaException(JSObject)` to get the original
+`Throwable` back:
+
+```java
+@JSFunctor
+interface JSRunnable extends JSObject {
+    void run();
+}
+
+@JSBody(params = "runnable", script = "runnable();")
+private static native void runJsCode(JSRunnable runnable);
+
+try {
+    JSError.catchNative(() -> {
+        runJsCode(() -> { throw new RuntimeException("from Java"); });
+        return null;
+    }, jsErr -> {
+        Throwable t = JSExceptions.getJavaException(jsErr);
+        System.out.println(t.getMessage()); // "from Java"
+        return null;
+    });
+} catch (RuntimeException ignored) {}
+```
+
+**Explicit JS try/catch** — `JSError.catchNative(tryClause, catchClause)` lets you perform a
+JavaScript-level try/catch from Java, which is necessary when you need to intercept native JS
+exceptions before they leave the JS stack:
+
+```java
+JSError.catchNative(() -> {
+    throwNativeException();
+    return null;
+}, e -> {
+    if (e instanceof JSError) {
+        JSError error = (JSError) e;
+        System.out.println(error.getMessage()); // "foo"
+    }
+    return null;
+});
 ```
