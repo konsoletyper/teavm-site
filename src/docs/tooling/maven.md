@@ -83,8 +83,7 @@ Here is the list of properties supported by the goal:
     recommended for WebAssembly.
 * **targetType** &ndash; what code to generate. Following options are supported:
   * *JAVASCRIPT*
-  * *WEBASSEMBLY*
-  * *WEBASSEMBLY_WASI*
+  * *WEBASSEMBLY_GC*
   * *C*
 * **jsModuleType** &ndash; which type of JavaScript module to use:
   * *COMMON_JS* &ndash; CommonJS (copatible with node.js);

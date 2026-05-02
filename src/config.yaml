@@ -16,9 +16,9 @@ site:
     - category: playground
       name: Playground
       path: /playground.html
-  teavmVersion: 0.13.1
+  teavmVersion: 0.14.0
   teavmDevVersion: 0.11.0-dev-1
-  teavmBranch: 0.13.x
+  teavmBranch: 0.14.x
   playgroundVersion: 3
 
 documents:
@@ -38,6 +38,8 @@ documents:
         synthesized: true
         path: release-notes
         children:
+          - title: Release 0.14.0
+            path: release-notes/0.14.0
           - title: Release 0.13.0
             path: release-notes/0.13.0
           - title: Release 0.12.1
