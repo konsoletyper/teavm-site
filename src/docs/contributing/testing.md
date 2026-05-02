@@ -25,16 +25,6 @@ of course, you don't necessary need to define properties in `$HOME/.gradle/gradl
 You can also pass them via `-D` command line option, please refer to Gradle documentation for details.
 
 
-## Setting up for WASI backend
-
-To run WASI tests, TeaVM uses [wasmtime](https://wasmtime.dev/) by default.
-You can use another WASI runtime by defining `teavm.junit.wasi.runner`, which points to script.
-This script takes two parameters: first is path to wasm file, and second is the command line argument
-that TeaVM passes to tests (needed for internal purposes).
-See `tests/run-wasi.sh` as example.
-
-You can also turn off WASI tests by setting `teavm.tests.wasi` property to `false`.
-
 
 ## Other useful properties
 
@@ -42,7 +32,7 @@ You can also turn off WASI tests by setting `teavm.tests.wasi` property to `fals
 * `teavm.tests.js` &ndash; controls whether tests run in JS backend.
 * `teavm.junit.js.decodeStack` &ndash; controls whether JS stacks are parsed into Java stack traces. 
   This improves debugging experience, but decreases test performance.
-* `teavm.junit.wasm` &ndash; controls whether tests run in WebAssembly backend.
+* `teavm.junit.wasm-gc` &ndash; controls whether tests run in WebAssembly backend.
 
 
 ## Running tests manually
