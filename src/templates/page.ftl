@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Java bytecode AOT compiler">
   <title>${site.name} <#if title != ""> &mdash; ${title}</#if></title>
   <link rel="stylesheet" href="/css/main.css">
@@ -12,7 +13,7 @@
   <nav class="site-navigation-container">
     <div class="site-navigation">
       <div class="site-navigation-header">
-        <button type="button" class="navigation-toggle collapsed" aria-expanded="false" aria-controls="navbar">
+        <button type="button" class="navigation-toggle" aria-expanded="false" aria-controls="navigation">
           Toggle navigation
         </button>
         <a class="site-title" href="/">${site.name}</a>
@@ -39,6 +40,26 @@
   <footer class="footer">
     ${site.name} ${site.year?c}
   </footer>
+  <script>
+    (function () {
+      var toggle = document.querySelector('.navigation-toggle');
+      var nav = document.getElementById('navigation');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function () {
+          var open = nav.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', String(open));
+        });
+      }
+      var docToggle = document.querySelector('.doc-menu-toggle');
+      var docMenu = document.querySelector('.documentation-menu');
+      if (docToggle && docMenu) {
+        docToggle.addEventListener('click', function () {
+          var open = docMenu.classList.toggle('open');
+          docToggle.setAttribute('aria-expanded', String(open));
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
 </#macro>

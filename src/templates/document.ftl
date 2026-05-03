@@ -3,6 +3,7 @@
 <@page.page title="${content.title}" category="docs" site=site>
   <div class="content-container">
     <div class="content documentation-content">
+      <button type="button" class="doc-menu-toggle" aria-expanded="false">Contents</button>
       <nav class="documentation-menu">
         <ul>
             <#list content.contents as section>
