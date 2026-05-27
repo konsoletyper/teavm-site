@@ -70,6 +70,8 @@ documents:
         path: runtime/metaprogramming
       - title: Tuning Java class library
         path: runtime/java-classes
+      - title: Compiler extensions
+        path: runtime/compiler-extensions
 
   - title: Wasm GC backend
     path: wasm-gc-backend
