@@ -159,6 +159,10 @@ Note that library plugin only supports `tests` section.
   * `FULL` &ndash; complete debug information.
 * `minDirectBuffersSize: Int` &ndash; minimum linear memory size in megabytes, used for NIO direct buffers
   and JS/Wasm data transfer. Default value is `2`.
+* `sharedBuffer: Boolean` &ndash; use a shared `ArrayBuffer` (backed by `SharedArrayBuffer`) for the
+  linear memory region used by direct NIO buffers and JS/Wasm data transfer.
+  Requires the page to be served with the appropriate `Cross-Origin-*` headers.
+  Default value is `false`.
 
 
 ### Emscripten interop (WasmGC)
@@ -193,6 +197,8 @@ These shortcuts are available in the TeaVM DSL object.
   and with native libraries (in case of C target).
 * `teavm.libs.metaprogramming` &ndash; library that simplifies compile-time code generation,
   that can be used instead of reflection.
+* `teavm.libs.spi` &ndash; SPI library for writing TeaVM extensions (custom class library patches,
+  dependency plugins, etc.).
 
 Example:
 
@@ -248,7 +254,13 @@ Following list defines these properties:
 * `wasm-gc.debugInformation.level`
 * `wasm-gc.minDirectBuffersSize`
 * `wasm-gc.maxDirectBuffersSize`
+* `wasm-gc.sharedBuffer`
 * `wasm-gc.emscripten.compilerArgs`
+* `wasm-gc.devServer.autoReload`
+* `wasm-gc.devServer.port`
+* `wasm-gc.devServer.proxy.url`
+* `wasm-gc.devServer.proxy.path`
+* `wasm-gc.devServer.memory`
 * `emscripten-location`
 * `c.heapDump`
 * `c.shortFileNames`
@@ -272,7 +284,6 @@ Here is a summary:
 * `generateJavaScript` &ndash; compiles Java/Kotlin/Scala code to JavaScript.
 * `javaScriptDevServer` &ndash; starts a long-running development server that caches compiler state and serves
   the compiled JS file over HTTP with hot-reload support.
-* `stopJavaScriptDevServer` &ndash; stops the development server.
 
 **WebAssembly GC**
 
@@ -287,10 +298,16 @@ Here is a summary:
   native `.js` + `.wasm` pair.
 * `buildWasmGC` &ndash; convenience task that runs `generateWasmGC`, `copyWasmGCRuntime`, `disasmWasmGC`, and
   the Emscripten tasks in the correct order.
+* `wasmGCDevServer` &ndash; starts a long-running development server that caches compiler state and serves
+  the compiled Wasm GC files over HTTP with hot-reload support.
 
 **C / native**
 
 * `generateC` &ndash; compiles code to C source files for further compilation with a native C/C++ compiler.
+
+**Development server**
+
+* `stopDevServer` &ndash; stops the development server (for all backends).
 
 You may want to include tasks in dependencies of other lifecycle tasks, for example:
 
@@ -319,16 +336,21 @@ C/C++ source files for Emscripten interop go in `src/teavm/emcc/` (files with ex
 `.c`, `.cpp`, `.C`, `.cc`, `.cxx`, `.c++`).
 
 
-# JavaScript development server
+# Development server
 
 In addition to normal builds, the development server can be used to improve developer experience.
-Development server is a separate process that keeps running between builds and serves files via HTTP.
+The development server is a separate process that keeps running between builds and serves files via HTTP.
 This allows the development server to cache compiler structures between rebuilds and thus speed up
 subsequent builds. Also, development server injects some additional metadata that allow deobfuscating
 stack traces on-the-fly. Finally, development server serves source maps together with source files,
 which can improve the debugging experience.
 
-To start development server, configure it using following DSL:
+Both JavaScript and WebAssembly GC backends support the development server.
+
+
+## JavaScript development server
+
+To start the JavaScript development server, configure it using following DSL:
 
 ```groovy
 teavm {
@@ -358,18 +380,61 @@ As you make changes to project, run `javaScriptDevServer` again. This won't rest
 Instead, it will inform the server that the `.class` files were changed and the server needs to pick them
 and re-build the JavaScript file.
 
-To stop the server process, run `stopJavaScriptDevServer` task.
+Additional JS-specific configuration properties:
 
-Available configuration properties:
-
-* `port` &ndash; port number the HTTP server listens on.
 * `stackDeobfuscated` &ndash; whether all JS stacks should be deobfuscated and proper Java stack traces
   generated.
 * `indicator` &ndash; injects a small indicator in the lower-left corner of the page to
   display compilation progress right in the web page.
+
+
+## WebAssembly GC development server
+
+To start the WebAssembly GC development server, configure it using following DSL:
+
+```groovy
+teavm {
+  wasmGC {
+    devServer {
+      port = port_number
+      // .. other values
+    }
+  }
+}
+```
+
+or shorter
+
+```groovy
+teavm.wasmGC.devServer {
+  // configuration properties here
+}
+```
+
+and run `wasmGCDevServer`. The `.wasm` file and its runtime loader will be served from
+`http://localhost:${port}/${relativePathInOutDir}/`, where placeholders correspond to
+configuration properties. Subsequent runs of the same task will just instruct the server to re-build the
+Wasm GC module.
+
+As you make changes to project, run `wasmGCDevServer` again. This won't restart the server.
+Instead, it will inform the server that the `.class` files were changed and the server needs to pick them
+and re-build the Wasm GC module.
+
+
+## Common dev server configuration properties
+
+These properties apply to both JavaScript and WebAssembly GC dev servers:
+
+* `port` &ndash; port number the HTTP server listens on.
 * `autoReload` &ndash; indicates whether the page should be reloaded as soon as compilation completes.
 * `processMemory` &ndash; amount of memory, in megabytes, to allocate for the server process.
-* `proxyUrl` &ndash; when specified, development server will not only serve generated JavaScript,
+* `proxyUrl` &ndash; when specified, development server will not only serve generated files,
   but also proxy all incoming requests to the given URL.
 * `proxyPath` &ndash; used in conjunction with `proxyUrl`. When specified, only requests starting with
   the specified path will be proxied.
+* `staticDirs` &ndash; additional directories whose contents are served as static files by the dev server.
+* `staticServePath` &ndash; URL path prefix under which `staticDirs` contents are served.
+* `resourceRoots` &ndash; classpath resource roots whose contents are served as static files.
+* `resourceServePath` &ndash; URL path prefix under which `resourceRoots` contents are served.
+
+To stop the server process (for all backends), run `stopDevServer` task.
