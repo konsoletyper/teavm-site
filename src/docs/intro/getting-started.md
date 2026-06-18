@@ -134,7 +134,7 @@ or if you need WebAssembly, HTML file like this:
 </html>
 ```
 
-now you can run build `gradle build` or, if you are using Gradle wrapper, `./gradlew build` or `gradlew.bat build`.
+now you can run build `gradle buildWasmGC` or, if you are using Gradle wrapper, `./gradlew buildWasmGC` or `gradlew.bat buildWasmGC`.
 Finally, take `.war` file from `build/libs` directory and deploy it to any compatible container or
 simply unzip and open `index.html`.
 
