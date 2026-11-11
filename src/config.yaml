@@ -38,6 +38,8 @@ documents:
         synthesized: true
         path: release-notes
         children:
+          - title: Release 0.17.0
+            path: release-notes/0.17.0
           - title: Release 0.16.0
             path: release-notes/0.16.0
           - title: Release 0.15.0
