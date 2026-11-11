@@ -118,6 +118,8 @@ documents:
         path: contributing/general
       - title: Testing
         path: contributing/testing
+      - title: Performance benchmarks
+        path: contributing/benchmarks
 
 gallery:
   - title: Okyline Studio

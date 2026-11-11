@@ -1,7 +1,7 @@
-JavaScript code, generated with TeaVM, can be tested in the browser by using JUnit.
-Currently only JUnit 4 supported
-(unfortunately, JUnit 5 does not provide necessary extension points for purposes of TeaVM).
-This requires some extra efforts.
+Code, generated with TeaVM, can be tested by using JUnit.
+TeaVM compiles each test class to JavaScript, WebAssembly GC or C, runs the result in a browser
+(or as a native application) and reports the result back to JUnit.
+Both JUnit 5 (Jupiter API, also works with JUnit 6) and JUnit 4 are supported.
 
 First, you need to include library that extends JUnit.
 Gradle plugins do it automatically, for Maven you should add following dependency:
@@ -15,11 +15,100 @@ Gradle plugins do it automatically, for Maven you should add following dependenc
 </dependency>
 ```
 
-Second, you should put `@RunWith(TeaVMTestRunner.class)`
-If for some reason you want each test method to be compiled in a separate VM, you may also annotate class with
-`@EachTestCompiledSeparately`. This can be necessary if you are testing custom TeaVM plugins or using 
-metaprogramming API.
+Note that TeaVM does not add JUnit itself, you should add it as you usually do.
+
+
+# JUnit 5
+
+Add JUnit Jupiter to your project. In Gradle:
+
+```kotlin
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+```
+
+In Maven, add `org.junit.jupiter:junit-jupiter` dependency with `test` scope.
+Recent versions of Surefire plugin detect JUnit Platform automatically.
+
+Then put `@TeaVMTest` annotation on a test class:
+
+```java
+@TeaVMTest
+public class SimpleTest {
+    @Test
+    public void simpleFields() {
+        var x = 2;
+        var y = 3;
+        assertEquals(5, x + y);
+    }
+}
+```
+
+TeaVM supports the following subset of JUnit 5:
+
+* `@Test` methods;
+* `@ParameterizedTest` methods (see below);
+* `@BeforeEach` and `@AfterEach` methods;
+* `@Disabled` annotation;
+* assertions from `org.junit.jupiter.api.Assertions`.
+
+Other features, like `@BeforeAll`/`@AfterAll`, `@Nested` classes, dynamic tests, `@RepeatedTest`
+and custom extensions (`@ExtendWith`), have no ahead-of-time compiled equivalent and are not supported
+by TeaVM.
+
+By default, all test methods of a class are compiled together, which is much faster than
+compiling each method separately.
+
+
+## Parameterized tests
+
+Arguments of parameterized tests are computed inside the compiled code, so TeaVM supports only argument
+sources that can be analyzed at compile time:
+
+* `@ValueSource`;
+* `@CsvSource`;
+* `@EnumSource`;
+* `@NullSource`, `@EmptySource` and `@NullAndEmptySource`;
+* `@MethodSource` and `@FieldSource`, referring to static members; factory methods must have no parameters.
+
+Arguments are converted to parameter types according to implicit conversion rules of JUnit.
+Explicit converters (`@ConvertWith`), argument aggregators, `@CsvFileSource` and custom `@ArgumentsSource`
+providers are not supported, TeaVM reports an error when it encounters them.
+
 Example:
+
+```java
+@TeaVMTest
+public class ParameterizedExampleTest {
+    @ParameterizedTest
+    @CsvSource({ "1, 2, 3", "2, 3, 5", "-1, 1, 0" })
+    public void sum(int a, int b, int expected) {
+        assertEquals(expected, a + b);
+    }
+
+    @ParameterizedTest
+    @MethodSource("strings")
+    public void notBlank(String s) {
+        assertFalse(s.isBlank());
+    }
+
+    static Stream<String> strings() {
+        return Stream.of("foo", "bar");
+    }
+}
+```
+
+
+# JUnit 4
+
+Put `@RunWith(TeaVMTestRunner.class)` annotation on a test class:
 
 ```java
 @RunWith(TeaVMTestRunner.class)
@@ -33,34 +122,51 @@ public class SimpleTest {
 }
 ```
 
-You can additionally put `@JvmSkip` annotation on class or on individual methods if you want
-tests run only in JS (or other TeaVM target).
+`@Before` and `@After` methods are supported.
 
-In multi-platform project you can additionally ignore tests (either single methods of whole classes)
-with `@SkipPlatform`. There's also opposite `@OnlyPlatform` which enumerates only platforms
-that are supported by test.
 
-Finally, you need to specify additional system properties to JUnit runner.
-For maven include following configuration:
+# Additional annotations
+
+Following annotations from `org.teavm.junit` package work with both JUnit 5 and JUnit 4:
+
+* `@SkipJVM` (on class or method) &ndash; don't run test in JVM, only in TeaVM targets.
+* `@SkipPlatform` (on class or method) &ndash; don't run test on listed platforms.
+* `@OnlyPlatform` (on class or method) &ndash; run test only on listed platforms.
+* `@EachTestCompiledSeparately` (on class) &ndash; compile each test method separately.
+  This can be necessary if you are testing custom TeaVM plugins or using metaprogramming API.
+* `@TeaVMProperties` (on class) &ndash; pass properties to the compiler.
+* `@AsyncEnabled` (on class or method) &ndash; enable support for coroutines.
+  Tests that use threads or other blocking APIs, like `Thread.sleep` or `Object.wait`,
+  must be annotated with it, otherwise compilation fails.
+  See [Coroutines](/docs/runtime/coroutines.html) for details.
+
+
+# Configuring runner
+
+## Maven
+
+For Maven, pass system properties to the test runner:
 
 ```xml
 <plugins>
   <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
-    <version>3.1.2</version>
+    <version>3.5.2</version>
 
     <configuration>
-      <systemProperties>
+      <systemPropertyVariables>
         <teavm.junit.target>\${project.build.directory}/js-tests</teavm.junit.target>
         <teavm.junit.js.runner>browser-chrome</teavm.junit.js.runner>
-      </systemProperties>
+      </systemPropertyVariables>
     </configuration>
   </plugin>
 </plugins>
 ```
 
-For Gradle, use TeaVM DSL:
+## Gradle
+
+For Gradle, use TeaVM DSL to configure JavaScript tests:
 
 ```groovy
 teavm.tests.js {
@@ -69,12 +175,30 @@ teavm.tests.js {
 }
 ```
 
+`teavm.tests.js` has the following properties:
 
-# Configuring runner using system properties
+* `enabled: Boolean` &ndash; enable JavaScript target.
+* `runner: TeaVMWebTestRunner` &ndash; how to run tests: `CHROME`, `FIREFOX`, `CUSTOM_BROWSER`
+  (print a link to stdout, that you should open in a browser) or `NONE` (only generate files).
+* `decodeStack: Boolean` &ndash; enable stack trace deobfuscation.
+
+For other targets, pass system properties (see below) to the `test` task:
+
+```kotlin
+tasks.test {
+    systemProperty("teavm.junit.wasm-gc", "true")
+    systemProperty("teavm.junit.wasm-gc.runner", "browser-chrome")
+}
+```
+
+
+## System properties
 
 Here is the list of available system properties:
 
 * `teavm.junit.target` &ndash; target directory where test files will be generated.
+* `teavm.junit.optimized` &ndash; additionally compile and run each test with optimizations enabled
+  (`true` or `false`).
 * `teavm.junit.js` &ndash; whether JS target is enabled (`true` or `false`).
   JS target is enabled by default.
 * `teavm.junit.js.runner` &ndash; how to run JS tests.
@@ -83,13 +207,17 @@ Here is the list of available system properties:
   `browser` value will print link to stdout, that you should open in a browser.
 * `teavm.junit.js.decodeStack` &ndash; controls stack trace deobfuscation (`true` or `false`).
   Can slow down test runner.
-* `teavm.junit.wasm` &ndash; whether WebAssembly target is enabled (`true` or `false`).
-* `teavm.junit.wasm.runner` &ndash; how to run WebAssembly tests.
-  Same as `teavm.junit.js.runner`, except for `htmlunit` value is not supported.
+* `teavm.junit.minified` &ndash; additionally compile and run each JS test with obfuscation enabled
+  (`true` or `false`).
+* `teavm.junit.wasm-gc` &ndash; whether WebAssembly target is enabled (`true` or `false`).
+* `teavm.junit.wasm-gc.runner` &ndash; how to run WebAssembly tests.
+  Same values as for `teavm.junit.js.runner`.
+* `teavm.junit.wasm-gc.disasm` &ndash; generate disassembly of each WebAssembly test module
+  as an HTML file (`true` or `false`).
 * `teavm.junit.c` &ndash; whether C target is enabled (`true` or `false`).
 * `teavm.junit.c.compiler` &ndash; command that compiles C to native code.
-  This is usually path to a *shell* file that takes `all.c` file in working directory 
-  and produces `run_tests` binary from it.
+  This is usually path to a *shell* file that takes `all.c` file in working directory
+  and produces `run_test` binary from it.
   For example:
 
   ```bash
@@ -111,21 +239,10 @@ Here is the list of available system properties:
   rm -rf $BUILD_DIR
   ```
 
-* `teavm.junit.wasi` &ndash; whether WebAssembly (WASI) target is enabled (`true` or `false`).
-* `teavm.junit.wasi.runner` &ndash; command that executes WebAssembly module in WASI environment.
-  This is usually a *shell* file that takes two arguments: path to `*.wasm` file and
-  one string command line argument to this file. For example:
-  
-  ```bash
-  ~/.wasmtime/bin/wasmtime run --mapdir /::target/wasi-testdir $1 $2
-  ```
-
-
-#  Configuring runner using Gradle DSL
-
-`teavm.tests.js` and `test.tests.wasm` objects have the following properties:
-
-* `enabled: Boolean` &ndash; enable corresponding target.
-* `runner: TeaVMWebTestRunner` &ndash; use corresponding runner.
-
-Also, `teavm.tests.js` provides `decodeStack` boolean property to enable stack trace deobfuscation.
+* `teavm.junit.c.envScript` &ndash; script that sets up environment variables for C compiler
+  (for example, MSVC developer environment). It runs once, and its environment is reused for all
+  compiler invocations.
+* `teavm.junit.c.runWrapper` &ndash; command that is used to run compiled test binaries.
+* `teavm.junit.c.lineNumbers` &ndash; generate line numbers in C code (`true` or `false`).
+* `teavm.junit.c.shortFileNames` &ndash; generate shorter file names (`true` or `false`).
+  Used to work around the buggy Microsoft C++ compiler.

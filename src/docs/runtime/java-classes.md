@@ -84,3 +84,25 @@ teavm {
 }
 ```
 
+
+
+# Performance tips
+
+Some parts of Java class library are compiled by TeaVM in a special way, and some code styles
+allow TeaVM to produce more efficient code.
+
+**Regular expressions.** When you pass a string literal (or another compile-time constant) as a regular
+expression, TeaVM parses this regular expression at compile time instead of doing this at run time.
+This applies to `Pattern.compile(String)`, `Pattern.compile(String, int)` (with constant flags),
+`Pattern.matches`, as well as `String` methods that take regular expressions:
+`matches`, `split`, `replaceAll`, `replaceFirst`.
+So, prefer constant regular expressions over regular expressions built dynamically.
+Also, `String.split` with a single-character literal that has no special meaning in regular expressions
+is compiled into a simple loop that does not involve regular expressions at all.
+
+**Async support.** Support for threads and blocking APIs has significant cost for the whole application.
+Keep it disabled unless you really need it, see [Coroutines](/docs/runtime/coroutines.html).
+
+**Assertions.** Use `assertionsRemoved` option for production builds
+(see [Gradle](/docs/tooling/gradle.html) and [Maven](/docs/tooling/maven.html) documentation).
+It removes not only `assert` statements, but also all code that is only reachable from them.

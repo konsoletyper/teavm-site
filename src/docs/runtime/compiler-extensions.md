@@ -196,6 +196,7 @@ public class MyReflectionPolicy extends SimpleReflectionPolicy {
 | Method | Applicable to | Description |
 |---|---|---|
 | `named(String)` | any element | Exact name match |
+| `namedEither(String...)` | any element | Name matches one of the given names |
 | `namePattern(String)` | any element | Glob pattern (`*` matches within a segment, `**` crosses `.` boundaries) |
 | `withAnnotation(Class)` or `withAnnotation(String)` | annotated elements | Element carries the given annotation |
 | `extending(Class)` or `extending(String)` | classes | Class is a subtype of the argument |
@@ -303,6 +304,80 @@ public class GLSubstitutionPolicy extends SimpleSubstitutionPolicy {
     }
 }
 ```
+
+
+### ResourceTransformer
+
+`org.teavm.extension.spi.transformation.ResourceTransformer` lets you modify class files and other
+classpath resources before TeaVM reads them.
+This is useful when a third-party library contains code that TeaVM can't compile, or that does something
+not supported in the browser, and you can't (or don't want to) fork the library.
+
+```java
+public interface ResourceTransformer {
+    byte[] transform(ResourceTransformerEnvironment environment, String name, byte[] resource);
+}
+```
+
+TeaVM calls `transform` for each resource it reads, including class files
+(for example, `com/example/Foo.class`).
+`name` is a classpath-relative path to the resource, `resource` contains its content.
+Return the new content, or return `resource` itself (or `null`) to leave the resource unchanged.
+If there are several transformers, they are applied one after another.
+
+Note that the transformer is called for *every* resource, including all classes of the Java class library,
+so check `name` first and return quickly if you are not interested in this resource.
+
+TeaVM does not parse class files for you, so use any bytecode manipulation library you prefer, for example
+[ASM](https://asm.ow2.io/).
+Add it as a regular dependency of the project (or library) that contains your transformer,
+so that it's available when TeaVM loads the extension.
+The following example replaces calls to `LegacyThreads.runInBackground(Runnable)`
+in a third-party library with calls to your own implementation, `WebThreads.runInBackground(Runnable)`:
+
+```java
+@Autoregistered
+public class LegacyThreadsTransformer implements ResourceTransformer {
+    private static final String TARGET_PREFIX = "com/thirdparty/";
+    private static final String OLD_OWNER = "com/thirdparty/util/LegacyThreads";
+    private static final String NEW_OWNER = "com/example/web/WebThreads";
+
+    @Override
+    public byte[] transform(ResourceTransformerEnvironment environment, String name, byte[] resource) {
+        if (!name.startsWith(TARGET_PREFIX) || !name.endsWith(".class")) {
+            return resource;
+        }
+        var reader = new ClassReader(resource);
+        var writer = new ClassWriter(0);
+        reader.accept(new ClassVisitor(Opcodes.ASM9, writer) {
+            @Override
+            public MethodVisitor visitMethod(int access, String methodName, String descriptor,
+                    String signature, String[] exceptions) {
+                var mv = super.visitMethod(access, methodName, descriptor, signature, exceptions);
+                return new MethodVisitor(Opcodes.ASM9, mv) {
+                    @Override
+                    public void visitMethodInsn(int opcode, String owner, String name, String descriptor,
+                            boolean isInterface) {
+                        if (opcode == Opcodes.INVOKESTATIC && owner.equals(OLD_OWNER)
+                                && name.equals("runInBackground")) {
+                            owner = NEW_OWNER;
+                        }
+                        super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+                    }
+                };
+            }
+        }, 0);
+        return writer.toByteArray();
+    }
+}
+```
+
+Transformers are applied in all kinds of builds: by Gradle and Maven plugins, by development server and
+by JUnit test runner.
+
+If you need to replace whole classes, consider `SubstitutionPolicy` (see above) instead,
+it's simpler and does not require a bytecode library.
+Use `ResourceTransformer` when you need to patch particular pieces of existing code.
 
 
 ### MetaprogrammingProvider

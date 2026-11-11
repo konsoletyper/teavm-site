@@ -470,3 +470,86 @@ import { greet } from './myModule.js';
 console.log(greet("Hello", "Alice", "Bob", "Carol"));
 // "Hello: Alice, Bob, Carol"
 ```
+
+
+# Handling `System.exit`
+
+Java code can terminate the application by calling `System.exit` (or `Runtime.exit`).
+In a native application this simply terminates the process, but a JavaScript module lives inside
+a host (a web page or a Node.js process), which keeps running.
+So TeaVM shuts down the module and lets the host know about it.
+
+After `System.exit(code)` is called:
+
+* no Java code runs anymore: `catch` and `finally` blocks on the stack are skipped,
+  suspended threads and pending timers are never resumed, threads that were started but did not start
+  running yet never start;
+* the JavaScript call that caused the exit (for example, a call to an exported function) throws `ExitError`;
+* any further call from JavaScript into the module throws `ExitError` as well.
+  This includes exported functions, methods, properties and constructors of exported classes,
+  as well as Java objects and lambdas previously passed to JavaScript (for example, event listeners);
+* in Node.js, `process.exit(code)` is called automatically;
+* elsewhere, an exit handler is called, if one is set (see below).
+
+`ExitError` is a subclass of JavaScript `Error`, its `name` is `"TeaVMExitError"`,
+and it has `exitCode` property that contains the code passed to `System.exit`.
+
+Note that you should not rely on catching `ExitError` to learn that the module was terminated.
+For example, `System.exit` can be called from a thread or a timer callback, when there's no JavaScript
+caller at all.
+Use the exit handler instead.
+
+
+## Runtime API
+
+When `System.exit` is reachable from your code, TeaVM adds an extra export to the module, named `teavmRuntime`.
+It provides the following members:
+
+* `setExitHandler(handler)` &ndash; sets a function that is called with the exit code when the module
+  is terminated. The handler is not called in Node.js, where the process is terminated instead.
+* `killedWithCode` &ndash; read-only property that contains the exit code, or `null` if the module
+  was not terminated yet.
+* `ExitError` &ndash; the class of errors, thrown after the module was terminated,
+  which you can use with `instanceof`.
+
+`teavmRuntime` export is not produced when `System.exit` is unreachable,
+so use optional chaining (`?.`) if your code should work in both cases.
+
+Example (ES2015 module):
+
+```java
+public class App {
+    @JSExport
+    public static void run(String command) {
+        if (command.equals("quit")) {
+            System.exit(3);
+        }
+        // ...
+    }
+}
+```
+
+```js
+import { run, teavmRuntime } from './app.js';
+
+teavmRuntime?.setExitHandler(code => {
+    document.body.textContent = "Application terminated with code " + code;
+});
+
+try {
+    run("quit");
+} catch (e) {
+    if (teavmRuntime && e instanceof teavmRuntime.ExitError) {
+        console.log("exit code:", e.exitCode); // 3
+    } else {
+        throw e;
+    }
+}
+
+console.log(teavmRuntime.killedWithCode); // 3
+```
+
+With `NONE` module type, and with `UMD` module type when no module system is available,
+`teavmRuntime` becomes a global declaration, like all other exports (including `main`).
+
+See also [Loader API](/docs/wasm-gc-backend/loader.html) (section "Handling `System.exit`") for WebAssembly GC backend.

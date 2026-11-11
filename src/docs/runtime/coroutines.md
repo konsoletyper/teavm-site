@@ -15,7 +15,62 @@ TeaVM supports [coroutines](https://en.wikipedia.org/wiki/Coroutine).
 Coroutines are special kinds of methods that can be suspended by runtime in a certain point and then resumed from this point.
 In particular, TeaVM uses coroutines to emulate `Thread` class together with few simple synchronization primitives.
 
-In most cases you don't need anything special to use coroutines.
+However, this support is **disabled by default**, and before enabling it, please read the next section.
+
+
+## Cost of coroutines
+
+**Coroutines are expensive, and the whole application pays for them, not only the code that uses threads.**
+
+A single reachable blocking call (like `Thread.sleep`, `Object.wait` or an `@Async` method somewhere
+in a third-party library) is enough to make the generated code noticeably larger and slower *everywhere*,
+including the parts of your application that never touch threads.
+
+For this reason, async support is disabled by default.
+Before enabling it, consider using asynchronous APIs instead, i.e. callbacks or JavaScript promises.
+
+
+## Enabling async support
+
+By default, TeaVM does not perform coroutine transformation (see the section above).
+In this mode, TeaVM reports a compilation error for each reachable method that can suspend execution.
+
+If your application really needs threads or other blocking APIs, enable async support explicitly.
+In Gradle:
+
+```groovy
+teavm {
+    all {
+        asyncEnabled = true
+    }
+}
+```
+
+or for a particular target only, e.g.:
+
+```groovy
+teavm.js {
+    asyncEnabled = true
+}
+```
+
+You can also set `teavm.asyncEnabled` Gradle property (see [Gradle documentation](/docs/tooling/gradle.html)).
+
+In Maven, use `asyncEnabled` parameter (or `teavm.asyncEnabled` property):
+
+```xml
+<configuration>
+  <asyncEnabled>true</asyncEnabled>
+</configuration>
+```
+
+To enable async support in tests, annotate test class or method with `@AsyncEnabled`
+(see [testing documentation](/docs/tooling/testing.html)).
+
+
+## Using coroutines
+
+Once async support is enabled, you don't need anything special to use coroutines.
 You just create a new thread and start it.
 You can use `synchronized` keyword, `Object.wait`, `Object.notify`, and so on.
 The only case you should care of is interaction with JavaScript API.
@@ -47,6 +102,9 @@ private static void foo(String arg, AsyncCallback<String> callback) {
 @JsBody(params = { "arg", "callback" }, script = "return foo(arg, callback);")
 public static native void fooAsync(String arg, JsConsumer<String> callback);
 ```
+
+Note that `@Async` methods require async support to be enabled.
+Otherwise, TeaVM reports a compilation error when such a method is reachable.
 
 So, to expose an asynchronous JavaScript API as a synchronous Java API, you need:
 

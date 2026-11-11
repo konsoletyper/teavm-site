@@ -6,13 +6,14 @@ This document describes the JavaScript API for loading and running TeaVM-compile
 
 TeaVM compiles Java (and Kotlin) code to WebAssembly GC. For each compiled `.wasm` file it also generates a companion `<name>.wasm-runtime.js` file that contains the loader and all runtime support code. The loader is exposed as `TeaVM.wasmGC` on the global object.
 
-The three public functions are:
+The public API consists of three functions and one class:
 
 | Symbol | Purpose |
 |---|---|
 | `TeaVM.wasmGC.load(src, options?)` | Load, compile, and instantiate a `.wasm` file. The main entry point. |
-| `TeaVM.wasmGC.defaults(imports, userExports, stringBuiltins)` | Low-level helper that fills an import object with all built-in TeaVM imports. Used when you need to instantiate the module yourself. |
+| `TeaVM.wasmGC.defaults(imports, userExports, stringBuiltins, onExit?)` | Low-level helper that fills an import object with all built-in TeaVM imports. Used when you need to instantiate the module yourself. |
 | `TeaVM.wasmGC.wrapImport(obj)` | Wraps a plain JS object so that each property is exposed as a `WebAssembly.Global(externref)`. Needed when passing JS objects as `externref` imports. |
+| `TeaVM.wasmGC.ExitError` | Error thrown when calling into a module terminated by `System.exit`. See *Handling `System.exit`*. |
 
 The two latter methods *can* be used if you want to link TeaVM method dynamically to your runtime. Their deep observation is out of scope for this document.
 
@@ -91,6 +92,7 @@ interface TeaVMInstance {
   exports: Record<string, unknown>; // Java @JSExport methods and globals
   instance: WebAssembly.Instance;   // raw WebAssembly instance
   module: WebAssembly.Module;       // compiled WebAssembly module
+  readonly killedWithCode: number | null; // exit code passed to System.exit, or null
 }
 ```
 
@@ -108,6 +110,11 @@ const result = teavm.exports.calculate(42);   // int calculate(int n)
 
 The raw `WebAssembly.Instance` and `WebAssembly.Module` are exposed for advanced use cases such as introspection or sharing the module across workers.
 
+### `killedWithCode`
+
+Contains the exit code if the module was terminated by `System.exit`, or `null` otherwise.
+See *Handling `System.exit`*.
+
 
 ## `LoadOptions` reference
 
@@ -122,6 +129,7 @@ interface LoadOptions {
   emscriptenModules?: Record<string, { pathToJs: string; pathToWasm: string }>;
   nodejs?:            boolean;
   noAutoImports?:     boolean;
+  onExit?:            (code: number) => void;
 }
 ```
 
@@ -276,6 +284,16 @@ noAutoImports?: boolean
 
 By default the loader scans the Wasm module's import section for `externref`-typed globals whose module name looks like an ES module specifier (e.g. `"./utils.js"`) and automatically imports them with a dynamic `import()`. Set `noAutoImports: true` to disable this behaviour and supply all such imports yourself via `installImports`.
 
+### `onExit`
+
+```ts
+onExit?: (code: number) => void
+```
+
+Called with the exit code when Java code terminates the module by calling `System.exit`.
+Ignored in Node.js, where `process.exit` is called instead.
+See *Handling `System.exit`* below.
+
 ## Overriding console output
 
 Java's `System.out` and `System.err` are routed through two functions in the `teavmConsole` import namespace:
@@ -341,6 +359,52 @@ try {
 ```
 
 With `stackDeobfuscator.enabled: true`, the `.stack` property contains the deobfuscated Java stack trace.
+
+After the module was terminated by `System.exit`, calls into it throw `ExitError` instead
+(see the next section).
+
+## Handling `System.exit`
+
+Java code can terminate the module by calling `System.exit` (or `Runtime.exit`).
+After this:
+
+* no Java code runs anymore: `catch` and `finally` blocks on the stack are skipped,
+  suspended threads and pending timers are never resumed;
+* the JavaScript call that caused the exit (for example, a call to an exported function) throws `ExitError`;
+* any further call from JavaScript into the module throws `ExitError` as well.
+  This includes exported functions and classes, as well as Java objects and lambdas previously
+  passed to JavaScript (for example, event listeners);
+* in Node.js, `process.exit(code)` is called;
+* elsewhere, the `onExit` callback is called, if passed to `load`.
+
+`ExitError` extends `Error`, its `name` is `"TeaVMExitError"`, and its `exitCode` property contains
+the code passed to `System.exit`.
+The class is available as `TeaVM.wasmGC.ExitError` (or as a named export when the runtime is used
+as an ES module).
+
+Note that you should not rely on catching `ExitError` to learn that the module was terminated:
+`System.exit` can be called from a thread or a timer callback, when there's no JavaScript caller at all.
+Use `onExit` instead.
+
+```js
+const teavm = await TeaVM.wasmGC.load("wasm-gc/app.wasm", {
+  onExit(code) {
+    document.body.textContent = "Application terminated with code " + code;
+  }
+});
+
+try {
+  teavm.exports.run("quit");
+} catch (e) {
+  if (e instanceof TeaVM.wasmGC.ExitError) {
+    console.log("exit code:", e.exitCode);
+  } else {
+    throw e;
+  }
+}
+
+console.log(teavm.killedWithCode);
+```
 
 ## Web Worker usage
 
@@ -427,6 +491,9 @@ const teavm = await load("./wasm-gc/app.wasm", { nodejs: true });
 teavm.exports.main([]);
 ```
 
+When Java code calls `System.exit`, the loader terminates the Node.js process with `process.exit`.
+The `onExit` option is ignored in this case.
+
 ## Emscripten interop
 
 Native C/C++ libraries compiled with Emscripten can be linked into a TeaVM Wasm GC module. The C code must be compiled with the following flags:
@@ -462,7 +529,7 @@ The loader automatically handles memory layout (aligning the native heap after J
 
 ## Advanced: ES module usage
 
-When the runtime is consumed as an ES module (the module-wrapper build), the three functions are named exports instead of properties on `TeaVM.wasmGC`:
+When the runtime is consumed as an ES module (the module-wrapper build), the three functions and `ExitError` class are named exports instead of properties on `TeaVM.wasmGC`:
 
 ```js
 import { load } from "./wasm-gc/app.wasm-runtime.js";

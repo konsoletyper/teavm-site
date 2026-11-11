@@ -91,6 +91,15 @@ Note that library plugin only supports `tests` section.
   only these classes into final binary.
   However, in some cases you may need to manually preserve some classes.
   For example, if these classes export some methods for native target, not observable by compiler.
+* `asyncEnabled: Boolean` &ndash; enables support for coroutines, which is required to use threads and
+  blocking APIs like `Thread.sleep` or `Object.wait`. When disabled, TeaVM reports an error for each reachable
+  method that requires coroutines. Coroutines have significant negative impact on size and performance
+  of the whole application, see [Coroutines](/docs/runtime/coroutines.html) for details.
+  Default value is `false`.
+* `assertionsRemoved: Boolean` &ndash; removes `assert` statements from the generated code.
+  Classes and methods that are only reachable from assertions are not included into the output either,
+  so this can noticeably reduce the size of the generated code. Recommended for production builds.
+  Default value is `false`.
 * `outOfProcess: Boolean` &ndash; tells whether TeaVM should be executed in a separate process.
   `false` by default.
 * `processMemory: Int` &ndash; in case TeaVM is executed in a separate process, how many memory, in megabytes,
@@ -267,6 +276,8 @@ Following list defines these properties:
 * `c.optimization`
 * `debugInformation`
 * `fastGlobalAnalysis`
+* `asyncEnabled`
+* `assertionsRemoved`
 * `outOfProcess`
 * `processMemory`
 

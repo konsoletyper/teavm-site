@@ -665,6 +665,11 @@ public abstract class SomeClass {
 
 Exceptions cross the Java–JavaScript boundary in both directions.
 
+**Calls after `System.exit`** — once Java code calls `System.exit`, the module is terminated, and any call
+from JavaScript into Java code (including Java objects and lambdas passed to JavaScript) throws `ExitError`.
+See [Creating JavaScript modules](/docs/runtime/js-modules.html) for JavaScript backend and
+[Loader API](/docs/wasm-gc-backend/loader.html) for WebAssembly GC backend.
+
 **Java exceptions propagating through JS code** — when a Java callback (functor or JSObject implementation)
 throws an exception and the call passes through `@JSBody` JavaScript code, the exception is wrapped in
 a native JS object and re-thrown. It will be caught by the nearest Java `catch` block as normal.

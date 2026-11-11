@@ -64,6 +64,9 @@ To make sure code satisfies code conventions, you can run following:
 
 This will run compilation, verification and other build-related tasks.
 
+If you change class library, optimizer or code generators, consider measuring how your change affects
+performance of the generated code, see [Performance benchmarks](/docs/contributing/benchmarks.html).
+
 
 # Contributing to class library
 
